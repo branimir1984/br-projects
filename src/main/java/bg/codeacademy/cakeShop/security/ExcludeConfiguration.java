@@ -1,4 +1,4 @@
-package bg.academy.library.security;
+package bg.codeacademy.cakeShop.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,11 +6,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-public class ExcludeConfiguration{
+public class ExcludeConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/registerUser"));
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/ver1/registration/**"));
     }
 }
