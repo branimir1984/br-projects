@@ -1,7 +1,6 @@
 package bg.codeacademy.cakeShop.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,15 +9,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"city", "street"})})
-public class Address {
+public class LegalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
-    private String city;
+    private String email;
 
-    @Column(nullable = false)
-    private String street;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "personalData")
+    private PersonalData personalData;
+
+    @Column(nullable = false, unique = true)
+    private String uin;
 }
