@@ -1,4 +1,4 @@
-package bg.academy.library.security;
+package bg.codeacademy.cakeShop.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +18,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-       /* http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                )
-                .headers(headers -> headers.frameOptions().disable())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")));*/
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -38,22 +30,8 @@ public class SecurityConfig {
                 .build();
     }
 
-    /* @Bean
-     public InMemoryUserDetailsManager users() {
-         UserDetails admin = User.withUsername("ADMIN")
-                 .password("admin")
-                 .roles("ADMIN")
-                 .build();
-         return new InMemoryUserDetailsManager(admin);
-     }*/
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
-
-   /* @Bean
-    public WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("http://localhost:8080/api/v1/users");
-    }*/
-
 }
