@@ -1,9 +1,6 @@
 package bg.codeacademy.cakeShop.error_handling;
 
-import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
-import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
-import bg.codeacademy.cakeShop.error_handling.exception.UserNameExistException;
-import bg.codeacademy.cakeShop.error_handling.exception.UserNotFoundException;
+import bg.codeacademy.cakeShop.error_handling.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -49,7 +46,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
-
+    @ExceptionHandler({LegalEntityNotFoundException.class})
+    public ResponseEntity<Object> handLegalEntityNotFoundException(LegalEntityNotFoundException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
