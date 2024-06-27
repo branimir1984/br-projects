@@ -1,15 +1,11 @@
 package bg.codeacademy.cakeShop.service;
 
-import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
+import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
-import bg.codeacademy.cakeShop.model.Address;
-import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.repository.AddressRepository;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Service
@@ -27,5 +23,14 @@ public class LegalEntityService {
         }
         legalEntityRepository.save(legalEntity);
         return legalEntity.getUin();
+    }
+
+    public LegalEntity getLegalEntityById(int id) {
+        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData(id);
+        if (legalEntity != null) {
+            return legalEntity;
+        } else {
+            throw new LegalEntityNotFoundException("Legal entity not found! id=" + id);
+        }
     }
 }
