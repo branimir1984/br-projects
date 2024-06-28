@@ -13,7 +13,6 @@ import java.util.List;
 @Service
 public class StaffService {
     public final StaffRepository staffRepository;
-    private Environment env;
     @Value("#{'${roles.staff}'.split(',')}")
     private List<String> roles;
 
