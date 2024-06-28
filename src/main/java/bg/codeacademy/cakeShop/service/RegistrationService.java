@@ -4,7 +4,6 @@ import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.PersonalData;
 import bg.codeacademy.cakeShop.model.Staff;
-import bg.codeacademy.cakeShop.repository.StaffRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +45,13 @@ public class RegistrationService {
         personalData.setAddress(address);
         personalDataService.addPersonalData(personalData);
         bankAccountService.addBankAccount(personalData.getBankAccount());
-        Staff staff = new Staff();
 
+        //When we save new Staff must set to it the employer.For that reason here we
+        //retrieve the LegalEntity according to the principal.
         PersonalData principalPersonalData = personalDataService.getByUserName(principal);
         LegalEntity legalEntity = legalEntityService.getLegalEntity(principalPersonalData);
 
+        Staff staff = new Staff();
         staff.setEmployer(legalEntity);
         staff.setPersonalData(personalData);
         try {
