@@ -19,19 +19,7 @@ public class Mapper {
     public LegalEntity mapToLegalEntity(LegalEntityRegistrationDTO dto) {
         PersonalData personalData = mapToPersonalData(dto.personalData());
 
-        List<BankAccountDTO> dtoList = dto.personalData().bankAccount();
-        List<BankAccount> accounts = new LinkedList<>();
-        for (BankAccountDTO b : dtoList) {
-            BankAccount bankAccount = new BankAccount();
-            bankAccount.setIban(b.iban());
-            bankAccount.setAmount(b.amount());
-            bankAccount.setCurrency(Currency.valueOf(b.currency()));
-            bankAccount.setRental(b.isRental());
-            bankAccount.setBeneficiary(personalData);
-            accounts.add(bankAccount);
-        }
 
-        personalData.setBankAccount(accounts);
         LegalEntity legalEntity = new LegalEntity();
         legalEntity.setUin(dto.uin());
         legalEntity.setEmail(dto.email());
@@ -49,6 +37,19 @@ public class Mapper {
         personalData.setUserRole(Role.valueOf(dto.role()));
         personalData.setAddress(address);
         personalData.setPersonalName(dto.personalName());
+        List<BankAccountDTO> dtoList = dto.bankAccount();
+        List<BankAccount> accounts = new LinkedList<>();
+
+        for (BankAccountDTO b : dtoList) {
+            BankAccount bankAccount = new BankAccount();
+            bankAccount.setIban(b.iban());
+            bankAccount.setAmount(b.amount());
+            bankAccount.setCurrency(Currency.valueOf(b.currency()));
+            bankAccount.setRental(b.isRental());
+            bankAccount.setBeneficiary(personalData);
+            accounts.add(bankAccount);
+        }
+        personalData.setBankAccount(accounts);
         return personalData;
     }
 }
