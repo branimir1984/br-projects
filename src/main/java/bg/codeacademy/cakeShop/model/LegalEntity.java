@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -23,4 +25,10 @@ public class LegalEntity {
 
     @Column(nullable = false, unique = true)
     private String uin;
+
+    @OneToMany(mappedBy = "offeror")
+    private List<Offer> offers;
+
+    @OneToMany(mappedBy = "offered")
+    private List<Offer> offered;
 }
