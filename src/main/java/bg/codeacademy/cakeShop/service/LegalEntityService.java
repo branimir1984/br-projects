@@ -3,10 +3,9 @@ package bg.codeacademy.cakeShop.service;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.LegalEntity;
+import bg.codeacademy.cakeShop.model.PersonalData;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class LegalEntityService {
@@ -25,12 +24,12 @@ public class LegalEntityService {
         return legalEntity.getUin();
     }
 
-    public LegalEntity getLegalEntityById(int id) {
-        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData(id);
+    public LegalEntity getLegalEntity(PersonalData personalData) {
+        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData(personalData);
         if (legalEntity != null) {
             return legalEntity;
         } else {
-            throw new LegalEntityNotFoundException("Legal entity not found! id=" + id);
+            throw new LegalEntityNotFoundException("Legal entity not found! name=" + personalData.getUserName());
         }
     }
 }

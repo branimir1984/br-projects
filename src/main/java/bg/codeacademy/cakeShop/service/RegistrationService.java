@@ -47,7 +47,7 @@ public class RegistrationService {
         Staff staff = new Staff();
 
         PersonalData principalPersonalData = personalDataService.getByUserName(principal);
-        LegalEntity legalEntity = legalEntityService.getLegalEntityById(principalPersonalData.getId());
+        LegalEntity legalEntity = legalEntityService.getLegalEntity(principalPersonalData);
 
         staff.setEmployer(legalEntity);
         staff.setPersonalData(personalData);
