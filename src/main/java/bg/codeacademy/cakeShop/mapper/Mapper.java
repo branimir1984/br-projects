@@ -2,6 +2,7 @@ package bg.codeacademy.cakeShop.mapper;
 
 import bg.codeacademy.cakeShop.dto.BankAccountDTO;
 import bg.codeacademy.cakeShop.dto.LegalEntityRegistrationDTO;
+import bg.codeacademy.cakeShop.dto.PersonalDataDTO;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.model.Address;
@@ -16,19 +17,29 @@ import java.util.List;
 @Component
 public class Mapper {
     public LegalEntity mapToLegalEntity(LegalEntityRegistrationDTO dto) {
+        PersonalData personalData = mapToPersonalData(dto.personalData());
+
+
+        LegalEntity legalEntity = new LegalEntity();
+        legalEntity.setUin(dto.uin());
+        legalEntity.setEmail(dto.email());
+        legalEntity.setPersonalData(personalData);
+        return legalEntity;
+    }
+
+    public PersonalData mapToPersonalData(PersonalDataDTO dto) {
         Address address = new Address();
-        address.setCity(dto.personalData().address().city());
-        address.setStreet(dto.personalData().address().street());
-
+        address.setCity(dto.address().city());
+        address.setStreet(dto.address().street());
         PersonalData personalData = new PersonalData();
-        personalData.setUserName(dto.personalData().userName());
-        personalData.setUserPassword(dto.personalData().password());
-        personalData.setUserRole(Role.valueOf(dto.personalData().role()));
+        personalData.setUserName(dto.userName());
+        personalData.setUserPassword(dto.password());
+        personalData.setUserRole(Role.valueOf(dto.role()));
         personalData.setAddress(address);
-        personalData.setPersonalName(dto.personalData().personalName());
-
-        List<BankAccountDTO> dtoList = dto.personalData().bankAccount();
+        personalData.setPersonalName(dto.personalName());
+        List<BankAccountDTO> dtoList = dto.bankAccount();
         List<BankAccount> accounts = new LinkedList<>();
+
         for (BankAccountDTO b : dtoList) {
             BankAccount bankAccount = new BankAccount();
             bankAccount.setIban(b.iban());
@@ -38,12 +49,7 @@ public class Mapper {
             bankAccount.setBeneficiary(personalData);
             accounts.add(bankAccount);
         }
-
         personalData.setBankAccount(accounts);
-        LegalEntity legalEntity = new LegalEntity();
-        legalEntity.setUin(dto.uin());
-        legalEntity.setEmail(dto.email());
-        legalEntity.setPersonalData(personalData);
-        return legalEntity;
+        return personalData;
     }
 }

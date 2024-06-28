@@ -24,4 +24,8 @@ public class PersonalDataService {
         personalDataRepository.save(personalData);
         return personalData.getUserName();
     }
+
+    public PersonalData getByUserName(String principal) {
+        return personalDataRepository.findPersonalDataByUserName(principal);
+    }
 }
