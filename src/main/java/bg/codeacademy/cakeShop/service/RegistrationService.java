@@ -35,7 +35,11 @@ public class RegistrationService {
         legalEntity.getPersonalData().setAddress(address);
         personalDataService.addPersonalData(legalEntity.getPersonalData());
         bankAccountService.addBankAccount(legalEntity.getPersonalData().getBankAccount());
-        legalEntityService.addLegalEntity(legalEntity);
+        try {
+            legalEntityService.addLegalEntity(legalEntity);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         return legalEntity.getUin();
     }
 
