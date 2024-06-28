@@ -31,7 +31,7 @@ public class LegalEntityService {
             throw new UniqueIdentificationNumberExistException("Legal entity with UIN:"
                     + legalEntity.getUin() + " is already exist!");
         }
-        legalEntityRepository.save(legalEntity);
+       legalEntityRepository.save(legalEntity);
         return legalEntity.getUin();
     }
 

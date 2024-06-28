@@ -3,23 +3,29 @@ package bg.codeacademy.cakeShop.service;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
-import bg.codeacademy.cakeShop.error_handling.exception.UserNameExistException;
 import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.PersonalData;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
-import bg.codeacademy.cakeShop.repository.PersonalDataRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.naming.OperationNotSupportedException;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 class LegalEntityServiceTest {
+    @InjectMocks
     static LegalEntityService legalEntityService;
+    private final List<String> legalEntityRoles = new LinkedList<>(List.of("SHOP", "RENTIER", "DELIVER"));
+    private final List<String> staffRoles = new LinkedList<>(List.of("MANAGER", "WORKER"));
     static LegalEntityRepository legalEntityRepository = mock(LegalEntityRepository.class);
 
     @BeforeAll
@@ -28,7 +34,49 @@ class LegalEntityServiceTest {
     }
 
     @Test
-    void shouldSaveLegalEntity() {
+    void shouldSaveLegalEntity() throws OperationNotSupportedException {
+
+        ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
+        LegalEntity legalEntity = formLegalEntity();
+
+        for (int i = 0; i < legalEntityRoles.size(); i++) {
+            legalEntity.getPersonalData().setUserRole(Role.valueOf(legalEntityRoles.get(i)));
+            when(legalEntityRepository.existsLegalEntityByUin("UIN")
+            ).thenReturn(false);
+            when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
+            String response = legalEntityService.addLegalEntity(legalEntity);
+            Assertions.assertEquals(legalEntity.getUin(), response);
+            verify(legalEntityRepository, times(i + 1)).save(legalEntity);
+        }
+    }
+
+    @Test
+    void shouldThrowUniqueIdentificationNumberExistException() {
+        ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
+        LegalEntity legalEntity = formLegalEntity();
+        legalEntity.setUin("UIN");
+        legalEntity.getPersonalData().setUserRole(Role.valueOf(legalEntityRoles.get(0)));
+        when(legalEntityRepository.existsLegalEntityByUin("UIN")
+        ).thenReturn(true);
+        Assertions.assertThrows(UniqueIdentificationNumberExistException.class, () -> {
+            legalEntityService.addLegalEntity(legalEntity);
+        });
+    }
+
+    @Test
+    void shouldThrowOperationNotSupportedException() throws OperationNotSupportedException {
+        ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
+        LegalEntity legalEntity = formLegalEntity();
+
+        for (String staffRole : staffRoles) {
+            legalEntity.getPersonalData().setUserRole(Role.valueOf(staffRole));
+            Assertions.assertThrows(OperationNotSupportedException.class, () -> {
+                legalEntityService.addLegalEntity(legalEntity);
+            });
+        }
+    }
+
+    private LegalEntity formLegalEntity() {
         Address address = new Address();
         address.setCity("city");
         address.setStreet("street");
@@ -39,7 +87,6 @@ class LegalEntityServiceTest {
 
         PersonalData personalData = new PersonalData();
         personalData.setUserName("test");
-        personalData.setUserRole(Role.DELIVER);
         personalData.setAddress(address);
         personalData.setBankAccount(List.of(account));
         personalData.setUserPassword("password");
@@ -49,23 +96,6 @@ class LegalEntityServiceTest {
         legalEntity.setEmail("someEmail");
         legalEntity.setUin("UIN");
         legalEntity.setPersonalData(personalData);
-
-        when(legalEntityRepository.existsLegalEntityByUin("UIN")
-        ).thenReturn(false);
-        String response = legalEntityService.addLegalEntity(legalEntity);
-        Assertions.assertEquals(legalEntity.getUin(), response);
-        verify(legalEntityRepository, times(1)).save(legalEntity);
-    }
-
-    @Test
-    void shouldThrowSaveLegalEntity() {
-        LegalEntity legalEntity = new LegalEntity();
-        legalEntity.setUin("UIN");
-
-        when(legalEntityRepository.existsLegalEntityByUin("UIN")
-        ).thenReturn(true);
-        Assertions.assertThrows(UniqueIdentificationNumberExistException.class, () -> {
-            legalEntityService.addLegalEntity(legalEntity);
-        });
+        return legalEntity;
     }
 }
