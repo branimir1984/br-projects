@@ -66,7 +66,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
-
+    @ExceptionHandler({OfferExistException.class})
+    public ResponseEntity<Object> handleOfferExistException(OfferExistException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+    @ExceptionHandler({InvalidOfferException.class})
+    public ResponseEntity<Object> handleInvalidOfferException(InvalidOfferException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
