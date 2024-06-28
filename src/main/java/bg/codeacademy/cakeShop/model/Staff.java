@@ -14,9 +14,11 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "employer")
     private LegalEntity employer;
 
-    @Column(nullable = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "personalData")
     private PersonalData personalData;
 }
