@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({UniqueIdentificationNumberExistException.class})
     public ResponseEntity<Object> handleUniqueIdentificationNumberExistException(UniqueIdentificationNumberExistException exception) {
         exception.printStackTrace(System.out);
@@ -32,6 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({UserNameExistException.class})
     public ResponseEntity<Object> handUserNameExistException(UserNameExistException exception) {
         exception.printStackTrace(System.out);
@@ -39,6 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<Object> handUserNotFoundException(UserNotFoundException exception) {
         exception.printStackTrace(System.out);
@@ -46,6 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({LegalEntityNotFoundException.class})
     public ResponseEntity<Object> handLegalEntityNotFoundException(LegalEntityNotFoundException exception) {
         exception.printStackTrace(System.out);
@@ -53,6 +58,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler({OperationNotSupportedException.class})
+    public ResponseEntity<Object> handleOperationNotSupportedException(OperationNotSupportedException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();

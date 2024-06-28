@@ -31,14 +31,16 @@ public class RegistrationController {
     public ResponseEntity<String> registerLegalEntity(@RequestBody LegalEntityRegistrationDTO dto) {
         LegalEntity legalEntity = mapper.mapToLegalEntity(dto);
         return new ResponseEntity<>(registrationService.registerLegalEntity(
-                legalEntity) + " successfully registered.", HttpStatus.CREATED);
+                legalEntity) +
+                " successfully registered as " + dto.personalData().role(), HttpStatus.CREATED);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/registerStaff")
     public ResponseEntity<String> registerStaff(@RequestBody PersonalDataDTO dto) {
         PersonalData personalData = mapper.mapToPersonalData(dto);
         return new ResponseEntity<>(registrationService.registerStaff(
-                personalData, getPrincipalName()) + " successfully registered.", HttpStatus.CREATED);
+                personalData, getPrincipalName()) +
+                " successfully registered as " + dto.role() + " with employer:" + getPrincipalName(), HttpStatus.CREATED);
     }
 
     public String getPrincipalName() {

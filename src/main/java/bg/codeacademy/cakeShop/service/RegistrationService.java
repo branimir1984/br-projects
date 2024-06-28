@@ -8,24 +8,26 @@ import bg.codeacademy.cakeShop.repository.StaffRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import javax.naming.OperationNotSupportedException;
+
 @Service
 public class RegistrationService {
     private final AddressService addressService;
     private final BankAccountService bankAccountService;
     private final PersonalDataService personalDataService;
     private final LegalEntityService legalEntityService;
-    private final StaffRepository staffRepository;
+    private final StaffService staffService;
 
     public RegistrationService(AddressService addressService,
                                BankAccountService bankAccountService,
                                PersonalDataService personalDataService,
                                LegalEntityService legalEntityService,
-                               StaffRepository staffRepository) {
+                               StaffService staffService) {
         this.addressService = addressService;
         this.bankAccountService = bankAccountService;
         this.personalDataService = personalDataService;
         this.legalEntityService = legalEntityService;
-        this.staffRepository = staffRepository;
+        this.staffService = staffService;
     }
 
     @Transactional
@@ -51,7 +53,11 @@ public class RegistrationService {
 
         staff.setEmployer(legalEntity);
         staff.setPersonalData(personalData);
-        staffRepository.save(staff);
+        try {
+            staffService.addStaff(staff);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         return personalData.getUserName();
     }
 }
