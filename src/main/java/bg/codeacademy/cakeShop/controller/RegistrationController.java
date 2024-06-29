@@ -35,14 +35,6 @@ public class RegistrationController {
                 " successfully registered as " + dto.personalData().role(), HttpStatus.CREATED);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/registerStaff")
-    public ResponseEntity<String> registerStaff(@RequestBody PersonalDataDTO dto) {
-        PersonalData personalData = mapper.mapToPersonalData(dto);
-        return new ResponseEntity<>(registrationService.registerStaff(
-                personalData, getPrincipalName()) +
-                " successfully registered as " + dto.role() + " with employer:" + getPrincipalName(), HttpStatus.CREATED);
-    }
-
     public String getPrincipalName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
