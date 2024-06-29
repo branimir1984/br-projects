@@ -5,7 +5,7 @@ import bg.codeacademy.cakeShop.dto.PersonalDataDTO;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.PersonalData;
-import bg.codeacademy.cakeShop.service.RegistrationService;
+
 import bg.codeacademy.cakeShop.service.StaffService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
