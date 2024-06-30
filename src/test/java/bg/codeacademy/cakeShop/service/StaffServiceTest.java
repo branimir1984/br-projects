@@ -24,6 +24,10 @@ class StaffServiceTest {
 
     private static StaffService staffService;
     private static final StaffRepository staffRepository = mock(StaffRepository.class);
+    private static final AddressService addressService = mock(AddressService.class);
+    private static final BankAccountService bankAccountService = mock(BankAccountService.class);
+    private static final PersonalDataService personalDataService = mock(PersonalDataService.class);
+    private static final LegalEntityService legalEntityService = mock(LegalEntityService.class);
     private static final List<String> staffRoles =
             new LinkedList<>(List.of("MANAGER", "WORKER"));
     private static final List<String> legalUserRole =
@@ -31,7 +35,11 @@ class StaffServiceTest {
 
     @BeforeAll
     public static void setup() {
-        staffService = new StaffService(staffRepository);
+        staffService = new StaffService(addressService
+                , bankAccountService
+                , personalDataService
+                , legalEntityService
+                , staffRepository);
         ReflectionTestUtils.setField(staffService, "roles", staffRoles);
     }
 
@@ -40,18 +48,18 @@ class StaffServiceTest {
         Staff staff = formStaff();
         for (int i = 0; i < staffRoles.size(); i++) {
             staff.getPersonalData().setUserRole(Role.valueOf(staffRoles.get(i)));
-            staffService.addStaff(staff);
+            staffService.addStaff(staff.getPersonalData(),"");
             verify(staffRepository, times(i + 1)).save(staff);
         }
     }
 
     @Test
-    void shouldThrowOperationNotSupportedException(){
+    void shouldThrowOperationNotSupportedException() {
         Staff staff = formStaff();
         for (String legalUserRole : legalUserRole) {
             staff.getPersonalData().setUserRole(Role.valueOf(legalUserRole));
             Assertions.assertThrows(OperationNotSupportedException.class, () -> {
-                staffService.addStaff(staff);
+                staffService.addStaff(staff.getPersonalData(),"");
             });
         }
     }
