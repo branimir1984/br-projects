@@ -2,6 +2,7 @@ package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
+import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.BankAccount;
@@ -24,17 +25,23 @@ import static org.mockito.Mockito.*;
 class LegalEntityServiceTest {
     @InjectMocks
     static LegalEntityService legalEntityService;
+    private static final AddressService addressService = mock(AddressService.class);
+    private static final BankAccountService bankAccountService = mock(BankAccountService.class);
+    private static final PersonalDataService personalDataService = mock(PersonalDataService.class);
     private final List<String> legalEntityRoles = new LinkedList<>(List.of("SHOP", "RENTIER", "DELIVER"));
     private final List<String> staffRoles = new LinkedList<>(List.of("MANAGER", "WORKER"));
     static LegalEntityRepository legalEntityRepository = mock(LegalEntityRepository.class);
 
     @BeforeAll
     public static void setup() {
-        legalEntityService = new LegalEntityService(legalEntityRepository);
+        legalEntityService = new LegalEntityService(legalEntityRepository
+                , addressService
+                , bankAccountService
+                , personalDataService);
     }
 
     @Test
-    void shouldSaveLegalEntity() throws OperationNotSupportedException {
+    void shouldSaveLegalEntity() {
 
         ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
         LegalEntity legalEntity = formLegalEntity();
@@ -64,13 +71,13 @@ class LegalEntityServiceTest {
     }
 
     @Test
-    void shouldThrowOperationNotSupportedException() throws OperationNotSupportedException {
+    void shouldThrowRoleNotSupportedException() throws OperationNotSupportedException {
         ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
         LegalEntity legalEntity = formLegalEntity();
 
         for (String staffRole : staffRoles) {
             legalEntity.getPersonalData().setUserRole(Role.valueOf(staffRole));
-            Assertions.assertThrows(OperationNotSupportedException.class, () -> {
+            Assertions.assertThrows(RoleNotSupportedException.class, () -> {
                 legalEntityService.addLegalEntity(legalEntity);
             });
         }
