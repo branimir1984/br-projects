@@ -32,7 +32,7 @@ public class StaffService {
     }
 
     @Transactional
-    public String addStaff(PersonalData personalData, String principal) {
+    public Staff addStaff(PersonalData personalData, String principal) {
         Address address = addressService.addAddress(personalData.getAddress());
         personalData.setAddress(address);
         personalDataService.addPersonalData(personalData);
@@ -50,7 +50,7 @@ public class StaffService {
         String role = String.valueOf(staff.getPersonalData().getUserRole());
         if (roles.contains(role)) {
             staffRepository.save(staff);
-            return personalData.getUserName();
+            return staff;
         } else {
             throw new RoleNotSupportedException("Allowed roles for staff are:" + roles);
         }
