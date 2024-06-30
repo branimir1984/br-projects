@@ -71,7 +71,7 @@ class LegalEntityServiceTest {
     }
 
     @Test
-    void shouldThrowRoleNotSupportedException(){
+    void shouldThrowRoleNotSupportedException() throws OperationNotSupportedException {
         ReflectionTestUtils.setField(legalEntityService, "roles", legalEntityRoles);
         LegalEntity legalEntity = formLegalEntity();
 
