@@ -26,7 +26,7 @@ public class LegalEntityController {
         this.mapper = mapper;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/save")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> save(@RequestBody LegalEntityRegistrationDTO dto) {
         LegalEntity legalEntity = mapper.mapToLegalEntity(dto);
         return new ResponseEntity<>(legalEntityService.addLegalEntity(legalEntity)+
