@@ -4,7 +4,6 @@ import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.error_handling.exception.InvalidOfferException;
 import bg.codeacademy.cakeShop.error_handling.exception.OfferExistException;
 import bg.codeacademy.cakeShop.model.*;
-import bg.codeacademy.cakeShop.repository.AddressRepository;
 import bg.codeacademy.cakeShop.repository.OfferRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,12 +19,10 @@ import static org.mockito.Mockito.*;
 class OfferServiceTest {
     static OfferService offerService;
     static OfferRepository offerRepository = mock(OfferRepository.class);
-
     @BeforeAll
     public static void setup() {
         offerService = new OfferService(offerRepository);
     }
-
     @Test
     void shouldAddOffer() {
         Offer offer = formOffer("A", "B");
@@ -68,18 +65,15 @@ class OfferServiceTest {
         Address address = new Address();
         address.setCity("city");
         address.setStreet("street");
-
         BankAccount account = new BankAccount();
         account.setIban("BG18RZBB91550123456789");
         account.setCurrency(Currency.BG);
-
         PersonalData personalData = new PersonalData();
         personalData.setUserName("test");
         personalData.setAddress(address);
         personalData.setBankAccount(List.of(account));
         personalData.setUserPassword("password");
         personalData.setPersonalName("personalName");
-
         LegalEntity legalEntity = new LegalEntity();
         legalEntity.setEmail("someEmail");
         legalEntity.setUin(uin);
