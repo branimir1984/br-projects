@@ -34,7 +34,7 @@ public class LegalEntityService {
     }
 
     @Transactional
-    public String addLegalEntity(LegalEntity legalEntity) {
+    public LegalEntity createLegalEntity(LegalEntity legalEntity) {
         String role = String.valueOf(legalEntity.getPersonalData().getUserRole());
         if (!roles.contains(role)) {
             throw new RoleNotSupportedException("Allowed roles for legal entity are:" + roles);
@@ -51,15 +51,19 @@ public class LegalEntityService {
         bankAccountService.addBankAccount(legalEntity.getPersonalData().getBankAccount());
 
         legalEntityRepository.save(legalEntity);
-        return legalEntity.getUin();
+        return legalEntity;
     }
 
-    public LegalEntity getLegalEntity(PersonalData personalData) {
-        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData(personalData);
+    public LegalEntity getLegalEntity(int id) {
+        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData_id(id);
         if (legalEntity != null) {
             return legalEntity;
         } else {
-            throw new LegalEntityNotFoundException("Legal entity not found! name=" + personalData.getUserName());
+            throw new LegalEntityNotFoundException("Legal entity with id:" + id + " not found!");
         }
+    }
+
+    public List<LegalEntity> getLegalEntities() {
+        return (List<LegalEntity>) legalEntityRepository.findAll();
     }
 }

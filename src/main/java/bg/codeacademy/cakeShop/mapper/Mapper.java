@@ -1,8 +1,6 @@
 package bg.codeacademy.cakeShop.mapper;
 
-import bg.codeacademy.cakeShop.dto.BankAccountDTO;
-import bg.codeacademy.cakeShop.dto.LegalEntityRegistrationDTO;
-import bg.codeacademy.cakeShop.dto.PersonalDataDTO;
+import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.model.Address;
@@ -11,6 +9,7 @@ import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.PersonalData;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,5 +50,42 @@ public class Mapper {
         }
         personalData.setBankAccount(accounts);
         return personalData;
+    }
+
+    public LegalEntityResponse mapLegalEntityToResponse(LegalEntity legalEntity) {
+        List<BankAccount> bankAccountList = legalEntity.getPersonalData().getBankAccount();
+        List<BankAccountDTO> bankAccountDTOList = new LinkedList<>();
+        for (BankAccount bAcc : bankAccountList) {
+            BankAccountDTO bAccDto = new BankAccountDTO(
+                    bAcc.getIban(),
+                    bAcc.getAmount(),
+                    String.valueOf(bAcc.getCurrency()),
+                    bAcc.isRental()
+            );
+            bankAccountDTOList.add(bAccDto);
+        }
+        Address address = legalEntity.getPersonalData().getAddress();
+        AddressDTO addressDTO = new AddressDTO(address.getCity(), address.getStreet());
+        PersonalData pd = legalEntity.getPersonalData();
+        PersonalDataDTO personalData = new PersonalDataDTO(
+                pd.getUserName(),
+                "",
+                String.valueOf(pd.getUserRole()),
+                pd.getPersonalName(),
+                addressDTO,
+                bankAccountDTOList
+        );
+        return new LegalEntityResponse(legalEntity.getEmail(),
+                legalEntity.getUin(),
+                personalData);
+    }
+
+    public List<LegalEntityResponse> mapLegalEntityToResponseList(List<LegalEntity> legalEntities) {
+        List<LegalEntityResponse> responseList = new ArrayList<>();
+        for (LegalEntity le : legalEntities) {
+            LegalEntityResponse response = mapLegalEntityToResponse(le);
+            responseList.add(response);
+        }
+        return responseList;
     }
 }

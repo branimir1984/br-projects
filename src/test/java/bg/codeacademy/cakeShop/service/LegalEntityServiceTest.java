@@ -11,9 +11,6 @@ import bg.codeacademy.cakeShop.model.PersonalData;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.naming.OperationNotSupportedException;
@@ -51,8 +48,8 @@ class LegalEntityServiceTest {
             when(legalEntityRepository.existsLegalEntityByUin("UIN")
             ).thenReturn(false);
             when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
-            String response = legalEntityService.addLegalEntity(legalEntity);
-            Assertions.assertEquals(legalEntity.getUin(), response);
+            LegalEntity response = legalEntityService.createLegalEntity(legalEntity);
+            Assertions.assertEquals(legalEntity, response);
             verify(legalEntityRepository, times(i + 1)).save(legalEntity);
         }
     }
@@ -66,7 +63,7 @@ class LegalEntityServiceTest {
         when(legalEntityRepository.existsLegalEntityByUin("UIN")
         ).thenReturn(true);
         Assertions.assertThrows(UniqueIdentificationNumberExistException.class, () -> {
-            legalEntityService.addLegalEntity(legalEntity);
+            legalEntityService.createLegalEntity(legalEntity);
         });
     }
 
@@ -78,7 +75,7 @@ class LegalEntityServiceTest {
         for (String staffRole : staffRoles) {
             legalEntity.getPersonalData().setUserRole(Role.valueOf(staffRole));
             Assertions.assertThrows(RoleNotSupportedException.class, () -> {
-                legalEntityService.addLegalEntity(legalEntity);
+                legalEntityService.createLegalEntity(legalEntity);
             });
         }
     }
