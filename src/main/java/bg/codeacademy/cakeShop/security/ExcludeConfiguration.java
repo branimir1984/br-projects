@@ -1,4 +1,3 @@
-/*
 package bg.codeacademy.cakeShop.security;
 
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ public class ExcludeConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/ver1/legalEntity/save"));
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/legal-entities"));
     }
 }
-*/
