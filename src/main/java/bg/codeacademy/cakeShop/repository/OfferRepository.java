@@ -8,5 +8,4 @@ import org.springframework.data.repository.CrudRepository;
 public interface OfferRepository extends CrudRepository<Offer, Integer> {
     boolean existsOfferByOfferorAndMoney(LegalEntity offeror, float money);
 
-    Offer findOfferByOfferorAndMoney(LegalEntity offeror, float money);
 }

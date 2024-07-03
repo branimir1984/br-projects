@@ -52,8 +52,6 @@ class StaffServiceTest {
 
             when(addressService.addAddress(any(Address.class)))
                     .thenReturn(staff.getPersonalData().getAddress());
-            when(personalDataService.getByUserName(any(String.class)))
-                    .thenReturn(staff.getPersonalData());
             when(legalEntityService.getLegalEntity(any(Integer.class)))
                     .thenReturn(legalEntity);
 
