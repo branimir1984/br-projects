@@ -17,35 +17,54 @@ import static org.mockito.Mockito.*;
 class OfferServiceTest {
     static OfferService offerService;
     static OfferRepository offerRepository = mock(OfferRepository.class);
+    static LegalEntityService legalEntityService = mock(LegalEntityService.class);
+
     @BeforeAll
     public static void setup() {
-        offerService = new OfferService(offerRepository);
+        offerService = new OfferService(offerRepository, legalEntityService);
     }
+
     @Test
-    void shouldAddOffer() {
+    void shouldCreateOffer() {
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity offered = formLegalEntity("B");
         Offer offer = formOffer("A", "B");
+        when(legalEntityService.getLegalEntity(1))
+                .thenReturn(offeror);
+        when(legalEntityService.getLegalEntity(2))
+                .thenReturn(offered);
         when(offerRepository.existsOfferByOfferorAndMoney(offer.getOfferor(), offer.getMoney()))
                 .thenReturn(false);
-        Offer response = offerService.createOffer(offer);
-        Assertions.assertEquals(offer, response);
-        verify(offerRepository, times(1)).save(offer);
+        Offer response = offerService.createOffer(1, 2, 200);
+        verify(offerRepository, times(1)).save(response);
     }
 
     @Test
     void shouldThrowInvalidOfferException() {
-        Offer offer = formOffer("A", "A");
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity offered = formLegalEntity("A");
+        Offer offer = formOffer("A", "B");
+        when(legalEntityService.getLegalEntity(1))
+                .thenReturn(offeror);
+        when(legalEntityService.getLegalEntity(1))
+                .thenReturn(offered);
         Assertions.assertThrows(InvalidOfferException.class, () -> {
-            offerService.createOffer(offer);
+            offerService.createOffer(1, 1, 200);
         });
     }
 
     @Test
     void shouldThrowOfferExistException() {
-        Offer offer = formOffer("B", "A");
-        when(offerRepository.existsOfferByOfferorAndMoney(offer.getOfferor(), offer.getMoney()))
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity offered = formLegalEntity("B");
+        when(legalEntityService.getLegalEntity(1))
+                .thenReturn(offeror);
+        when(legalEntityService.getLegalEntity(2))
+                .thenReturn(offered);
+        when(offerRepository.existsOfferByOfferorAndMoney(offeror, 200))
                 .thenReturn(true);
         Assertions.assertThrows(OfferExistException.class, () -> {
-            offerService.createOffer(offer);
+            offerService.createOffer(1, 2, 200);
         });
     }
 
