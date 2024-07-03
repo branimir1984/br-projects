@@ -21,7 +21,9 @@ public class AuthenticatedUser implements UserDetails {
     public String getUsername() {
         return personalData.getUserName();
     }
-
+    public int getId() {
+        return personalData.getId();
+    }
     @Override
     public String getPassword() {
         return personalData.getUserPassword();
