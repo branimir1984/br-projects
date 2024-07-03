@@ -12,7 +12,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LegalEntityService {
@@ -68,11 +70,11 @@ public class LegalEntityService {
         return (List<LegalEntity>) legalEntityRepository.findAll();
     }
 
-    public List<Offer> getOffers(Role role, int id) {
-        if(role.equals(Role.SHOP)){
-            return getLegalEntity(id).getOffered();
-        }else{
-            return getLegalEntity(id).getOfferors();
-        }
+    public Map<String, List<Offer>> getOffers(int id) {
+        LegalEntity entity = getLegalEntity(id);
+        Map<String, List<Offer>> allTypeOffers = new HashMap<>();
+        allTypeOffers.put("offeror", entity.getOfferors());
+        allTypeOffers.put("offered", entity.getOffered());
+        return allTypeOffers;
     }
 }

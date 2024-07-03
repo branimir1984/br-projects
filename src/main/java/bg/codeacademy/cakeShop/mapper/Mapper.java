@@ -6,9 +6,7 @@ import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.model.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class Mapper {
@@ -86,15 +84,26 @@ public class Mapper {
         return responseList;
     }
 
-    public List<OfferResponceDTO> mapToOfferResponceDTOList(List<Offer> offers) {
-        List<OfferResponceDTO> dtoList = new ArrayList<>();
-        for (Offer offer : offers) {
-            OfferResponceDTO dto = new OfferResponceDTO(offer.getMoney(),
-                    offer.getOfferor().getUin(),
-                    offer.getOfferor().getPersonalData().getPersonalName(),
-                    offer.getOfferor().getEmail());
-            dtoList.add(dto);
+    public Map<String, List<OfferResponceDTO>> mapToOfferResponceDTOList(Map<String, List<Offer>> offers) {
+
+        Map<String, List<OfferResponceDTO>> dtoResponse = new HashMap<>();
+
+        for (Map.Entry<String, List<Offer>> entry : offers.entrySet()) {
+            System.out.println("Key = " + entry.getKey() +
+                    ", Value = " + entry.getValue());
+            List<OfferResponceDTO> list = new ArrayList<>();
+
+            for (Offer of : entry.getValue()) {
+                OfferResponceDTO offerResponse = new OfferResponceDTO(
+                        of.getMoney(),
+                        of.getOfferor().getUin(),
+                        of.getOfferor().getPersonalData().getPersonalName(),
+                        of.getOfferor().getEmail()
+                );
+                list.add(offerResponse);
+            }
+            dtoResponse.put(entry.getKey(), list);
         }
-        return dtoList;
+        return dtoResponse;
     }
 }

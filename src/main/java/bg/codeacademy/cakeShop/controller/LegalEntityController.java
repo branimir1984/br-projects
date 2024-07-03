@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 @EnableMethodSecurity
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -58,21 +61,11 @@ public class LegalEntityController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Secured("ROLE_SHOP")
-    @GetMapping("/shop/offers")
-    public ResponseEntity<List<OfferResponceDTO>> getShopOffers(Authentication authentication) {
+    @GetMapping("/offers")
+    public ResponseEntity<Map<String, List<OfferResponceDTO>>> getOffers(Authentication authentication) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
-        List<Offer> offers = legalEntityService.getOffers(Role.SHOP, user.getId());
-        List<OfferResponceDTO> dtoList = mapper.mapToOfferResponceDTOList(offers);
-        return new ResponseEntity<>(dtoList, HttpStatus.OK);
-    }
-
-    @Secured("ROLE_DELIVER")
-    @GetMapping("/deliver/offers")
-    public ResponseEntity<List<OfferResponceDTO>> getDeliverOffers(Authentication authentication) {
-        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
-        List<Offer> offers = legalEntityService.getOffers(Role.DELIVER, user.getId());
-        List<OfferResponceDTO> dtoList = mapper.mapToOfferResponceDTOList(offers);
+        Map<String, List<Offer>> offers = legalEntityService.getOffers(user.getId());
+        Map<String, List<OfferResponceDTO>> dtoList = mapper.mapToOfferResponceDTOList(offers);
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 }
