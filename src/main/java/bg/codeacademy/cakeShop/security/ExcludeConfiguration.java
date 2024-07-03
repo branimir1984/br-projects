@@ -1,3 +1,4 @@
+/*
 package bg.codeacademy.cakeShop.security;
 
 import org.springframework.context.annotation.Bean;
@@ -14,3 +15,4 @@ public class ExcludeConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/ver1/legalEntity/save"));
     }
 }
+*/
