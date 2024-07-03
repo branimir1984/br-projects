@@ -3,10 +3,7 @@ package bg.codeacademy.cakeShop.mapper;
 import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
-import bg.codeacademy.cakeShop.model.Address;
-import bg.codeacademy.cakeShop.model.BankAccount;
-import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.model.PersonalData;
+import bg.codeacademy.cakeShop.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -87,5 +84,17 @@ public class Mapper {
             responseList.add(response);
         }
         return responseList;
+    }
+
+    public List<OfferResponceDTO> mapToOfferResponceDTOList(List<Offer> offers) {
+        List<OfferResponceDTO> dtoList = new ArrayList<>();
+        for (Offer offer : offers) {
+            OfferResponceDTO dto = new OfferResponceDTO(offer.getMoney(),
+                    offer.getOfferor().getUin(),
+                    offer.getOfferor().getPersonalData().getPersonalName(),
+                    offer.getOfferor().getEmail());
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 }

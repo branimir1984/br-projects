@@ -11,9 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class OfferServiceTest {
@@ -28,7 +26,7 @@ class OfferServiceTest {
         Offer offer = formOffer("A", "B");
         when(offerRepository.existsOfferByOfferorAndMoney(offer.getOfferor(), offer.getMoney()))
                 .thenReturn(false);
-        Offer response = offerService.addOffer(offer);
+        Offer response = offerService.createOffer(offer);
         Assertions.assertEquals(offer, response);
         verify(offerRepository, times(1)).save(offer);
     }
@@ -37,7 +35,7 @@ class OfferServiceTest {
     void shouldThrowInvalidOfferException() {
         Offer offer = formOffer("A", "A");
         Assertions.assertThrows(InvalidOfferException.class, () -> {
-            offerService.addOffer(offer);
+            offerService.createOffer(offer);
         });
     }
 
@@ -47,7 +45,7 @@ class OfferServiceTest {
         when(offerRepository.existsOfferByOfferorAndMoney(offer.getOfferor(), offer.getMoney()))
                 .thenReturn(true);
         Assertions.assertThrows(OfferExistException.class, () -> {
-            offerService.addOffer(offer);
+            offerService.createOffer(offer);
         });
     }
 

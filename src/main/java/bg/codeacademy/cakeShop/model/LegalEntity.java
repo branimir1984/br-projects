@@ -27,7 +27,7 @@ public class LegalEntity {
     private String uin;
 
     @OneToMany(mappedBy = "offeror")
-    private List<Offer> offers;
+    private List<Offer> offerors;
 
     @OneToMany(mappedBy = "offered")
     private List<Offer> offered;

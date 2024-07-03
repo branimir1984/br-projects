@@ -1,11 +1,12 @@
 package bg.codeacademy.cakeShop.service;
 
+import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.model.PersonalData;
+import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,5 +66,13 @@ public class LegalEntityService {
 
     public List<LegalEntity> getLegalEntities() {
         return (List<LegalEntity>) legalEntityRepository.findAll();
+    }
+
+    public List<Offer> getOffers(Role role, int id) {
+        if(role.equals(Role.SHOP)){
+            return getLegalEntity(id).getOffered();
+        }else{
+            return getLegalEntity(id).getOfferors();
+        }
     }
 }
