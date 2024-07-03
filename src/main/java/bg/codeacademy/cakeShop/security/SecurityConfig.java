@@ -23,9 +23,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(AntPathRequestMatcher
-                                .antMatcher("/api/ver1/registration/registerStaff"))
-                        .hasRole("SHOP")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()).sessionManagement(session ->

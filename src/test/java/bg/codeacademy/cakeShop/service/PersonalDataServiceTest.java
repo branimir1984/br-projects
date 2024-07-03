@@ -6,7 +6,6 @@ import bg.codeacademy.cakeShop.error_handling.exception.UserNameExistException;
 import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.model.PersonalData;
-import bg.codeacademy.cakeShop.repository.AddressRepository;
 import bg.codeacademy.cakeShop.repository.PersonalDataRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,11 +29,9 @@ class PersonalDataServiceTest {
         Address address = new Address();
         address.setCity("city");
         address.setStreet("street");
-
         BankAccount account = new BankAccount();
         account.setIban("BG18RZBB91550123456789");
         account.setCurrency(Currency.BG);
-
         PersonalData personalData = new PersonalData();
         personalData.setUserName("test");
         personalData.setUserRole(Role.DELIVER);
@@ -42,7 +39,6 @@ class PersonalDataServiceTest {
         personalData.setBankAccount(List.of(account));
         personalData.setUserPassword("password");
         personalData.setPersonalName("personalName");
-
         when(personalDataRepository.existsPersonalDataByUserName
                 (personalData.getUserName())).thenReturn(false);
         String response = personalDataService.addPersonalData(personalData);
@@ -54,7 +50,6 @@ class PersonalDataServiceTest {
     void shouldNotSavePersonalData() {
         PersonalData personalData = new PersonalData();
         personalData.setUserName("test");
-
         when(personalDataRepository.existsPersonalDataByUserName
                 (anyString())).thenReturn(true);
         Assertions.assertThrows(UserNameExistException.class, () -> {

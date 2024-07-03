@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.List;
 
 @Service
@@ -32,16 +31,13 @@ public class StaffService {
     }
 
     @Transactional
-    public Staff addStaff(PersonalData personalData, String principal) {
+    public Staff createStaff(PersonalData personalData, int principalId) {
         Address address = addressService.addAddress(personalData.getAddress());
         personalData.setAddress(address);
         personalDataService.addPersonalData(personalData);
         bankAccountService.addBankAccount(personalData.getBankAccount());
 
-        //When we save new Staff must set to it the employer.For that reason here we
-        //retrieve the LegalEntity according to the principal.
-        PersonalData principalPersonalData = personalDataService.getByUserName(principal);
-        LegalEntity legalEntity = legalEntityService.getLegalEntity(principalPersonalData);
+        LegalEntity legalEntity = legalEntityService.getLegalEntity(principalId);
 
         Staff staff = new Staff();
         staff.setEmployer(legalEntity);

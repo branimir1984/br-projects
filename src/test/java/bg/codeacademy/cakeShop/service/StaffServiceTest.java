@@ -6,28 +6,35 @@ import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedExceptio
 import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.repository.StaffRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 class StaffServiceTest {
 
     private static StaffService staffService;
-    private static final StaffRepository staffRepository = mock(StaffRepository.class);
-    private static final AddressService addressService = mock(AddressService.class);
-    private static final BankAccountService bankAccountService = mock(BankAccountService.class);
-    private static final PersonalDataService personalDataService = mock(PersonalDataService.class);
-    private static final LegalEntityService legalEntityService = mock(LegalEntityService.class);
+    private static StaffRepository staffRepository;
+    private static AddressService addressService;
+    private static BankAccountService bankAccountService;
+    private static PersonalDataService personalDataService;
+    private static LegalEntityService legalEntityService;
     private static final List<String> staffRoles =
             new LinkedList<>(List.of("MANAGER", "WORKER"));
     private static final List<String> legalUserRole =
             new LinkedList<>(List.of("SHOP", "RENTIER", "DELIVER"));
 
-    @BeforeAll
-    public static void setup() {
+    @BeforeEach
+    public void setup() {
+        staffRepository = mock(StaffRepository.class);
+        addressService = mock(AddressService.class);
+        bankAccountService = mock(BankAccountService.class);
+        personalDataService = mock(PersonalDataService.class);
+        legalEntityService = mock(LegalEntityService.class);
         staffService = new StaffService(addressService
                 , bankAccountService
                 , personalDataService
@@ -45,23 +52,18 @@ class StaffServiceTest {
 
             when(addressService.addAddress(any(Address.class)))
                     .thenReturn(staff.getPersonalData().getAddress());
-            when(personalDataService.getByUserName(any(String.class)))
-                    .thenReturn(staff.getPersonalData());
-            when(legalEntityService.getLegalEntity(any(PersonalData.class)))
+            when(legalEntityService.getLegalEntity(any(Integer.class)))
                     .thenReturn(legalEntity);
 
-            Staff response = staffService.addStaff(staff.getPersonalData(), "principal");
-
+            Staff response = staffService.createStaff(staff.getPersonalData(), 4);
             verify(addressService, times(i + 1))
                     .addAddress(staff.getPersonalData().getAddress());
             verify(personalDataService
                     , times(i + 1)).addPersonalData(staff.getPersonalData());
             verify(bankAccountService
                     , times(i + 1)).addBankAccount(staff.getPersonalData().getBankAccount());
-            verify(personalDataService
-                    , times(i + 1)).getByUserName("principal");
             verify(legalEntityService
-                    , times(i + 1)).getLegalEntity(staff.getPersonalData());
+                    , times(i + 1)).getLegalEntity(4);
 
             verify(staffRepository, times(1)).save(response);
         }
@@ -74,8 +76,8 @@ class StaffServiceTest {
         for (String legalUserRole : legalUserRole) {
             staff.getPersonalData().setUserRole(Role.valueOf(legalUserRole));
             Assertions.assertThrows(RoleNotSupportedException.class, () -> {
-                staffService.addStaff(staff.getPersonalData()
-                        , staff.getEmployer().getPersonalData().getUserName());
+                staffService.createStaff(staff.getPersonalData()
+                        , 4);
             });
         }
     }
@@ -98,6 +100,7 @@ class StaffServiceTest {
         staff.setPersonalData(personalData);
         return staff;
     }
+
     private LegalEntity formLegalEntity() {
         Address address = new Address();
         address.setCity("city");

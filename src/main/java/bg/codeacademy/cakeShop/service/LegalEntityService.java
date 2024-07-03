@@ -1,17 +1,20 @@
 package bg.codeacademy.cakeShop.service;
 
+import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.model.PersonalData;
+import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LegalEntityService {
@@ -34,7 +37,7 @@ public class LegalEntityService {
     }
 
     @Transactional
-    public String addLegalEntity(LegalEntity legalEntity) {
+    public LegalEntity createLegalEntity(LegalEntity legalEntity) {
         String role = String.valueOf(legalEntity.getPersonalData().getUserRole());
         if (!roles.contains(role)) {
             throw new RoleNotSupportedException("Allowed roles for legal entity are:" + roles);
@@ -51,15 +54,27 @@ public class LegalEntityService {
         bankAccountService.addBankAccount(legalEntity.getPersonalData().getBankAccount());
 
         legalEntityRepository.save(legalEntity);
-        return legalEntity.getUin();
+        return legalEntity;
     }
 
-    public LegalEntity getLegalEntity(PersonalData personalData) {
-        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData(personalData);
+    public LegalEntity getLegalEntity(int id) {
+        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByPersonalData_id(id);
         if (legalEntity != null) {
             return legalEntity;
         } else {
-            throw new LegalEntityNotFoundException("Legal entity not found! name=" + personalData.getUserName());
+            throw new LegalEntityNotFoundException("Legal entity with id:" + id + " not found!");
         }
+    }
+
+    public List<LegalEntity> getLegalEntities() {
+        return (List<LegalEntity>) legalEntityRepository.findAll();
+    }
+
+    public Map<String, List<Offer>> getOffers(int id) {
+        LegalEntity entity = getLegalEntity(id);
+        Map<String, List<Offer>> allTypeOffers = new HashMap<>();
+        allTypeOffers.put("offeror", entity.getOfferors());
+        allTypeOffers.put("offered", entity.getOffered());
+        return allTypeOffers;
     }
 }

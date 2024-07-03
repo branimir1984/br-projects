@@ -5,11 +5,9 @@ import bg.codeacademy.cakeShop.repository.AddressRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import static org.mockito.Mockito.*;
 
 class AddressServiceTest {
-
     static AddressService addressService;
     static AddressRepository addressRepository = mock(AddressRepository.class);
 
