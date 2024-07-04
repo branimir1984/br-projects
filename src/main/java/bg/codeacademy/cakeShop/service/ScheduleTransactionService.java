@@ -32,14 +32,14 @@ public class ScheduleTransactionService {
             Date transactionTime) {
 
         if (senderId == recipientId) {
-            throw new InvalidScheduleTransactionException("The sender and recipient can ton be same!");
+            throw new InvalidScheduleTransactionException("The sender and recipient can not be same!");
         }
         LegalEntity sender = legalEntityService.getLegalEntity(senderId);
         LegalEntity recipient = legalEntityService.getLegalEntity(recipientId);
-        BankAccount senderBankAccount = getBankAccount(sender, senderBankAccountIban,
-                senderBankAccountIban, " not exist for sender!");
-        BankAccount recipientBankAccount = getBankAccount(recipient, recipientBankAccountIban,
-                senderBankAccountIban, " not exist for recipient!");
+        BankAccount senderBankAccount = getBankAccount(
+                sender, senderBankAccountIban, " not exist for sender!");
+        BankAccount recipientBankAccount = getBankAccount(
+                recipient, recipientBankAccountIban, " not exist for recipient!");
         ScheduleTransaction transaction = new ScheduleTransaction();
         transaction.setSender(senderBankAccount);
         transaction.setRecipient(recipientBankAccount);
@@ -56,7 +56,7 @@ public class ScheduleTransactionService {
     }
 
     private static BankAccount getBankAccount(LegalEntity sender, String senderBankAccountIban
-            , String senderBankAccountIban1, String x) {
+            , String x) {
         List<BankAccount> senderBankAccounts = sender.getPersonalData().getBankAccount();
         BankAccount senderBankAccount = null;
         for (BankAccount account : senderBankAccounts) {
@@ -66,7 +66,7 @@ public class ScheduleTransactionService {
             }
         }
         if (senderBankAccount == null) {
-            throw new BankNotAccountExistException("Bank account with IBAN:" + senderBankAccountIban1
+            throw new BankNotAccountExistException("Bank account with IBAN:" + senderBankAccountIban
                     + x);
         }
         return senderBankAccount;
