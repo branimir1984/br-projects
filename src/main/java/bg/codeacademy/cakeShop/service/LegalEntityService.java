@@ -4,14 +4,13 @@ import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
-import bg.codeacademy.cakeShop.model.Address;
-import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.model.Offer;
+import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +75,19 @@ public class LegalEntityService {
         allTypeOffers.put("offeror", entity.getOfferors());
         allTypeOffers.put("offered", entity.getOffered());
         return allTypeOffers;
+    }
+
+    public List<ScheduleTransaction> getScheduleTransactions(int id) {
+        LegalEntity user = getLegalEntity(id);
+        List<BankAccount> myBankAccounts = user.getPersonalData().getBankAccount();
+        List<ScheduleTransaction> myTransactions = new ArrayList<>();
+        System.out.println();
+        for (BankAccount account : myBankAccounts) {
+
+            myTransactions.addAll(account.getSender());
+        }
+        System.out.println(myTransactions.size()
+        );
+        return myTransactions;
     }
 }

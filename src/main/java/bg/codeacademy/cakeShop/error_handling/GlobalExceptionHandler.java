@@ -83,8 +83,33 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler({ScheduleTransactionExistException.class})
+    public ResponseEntity<Object> handleScheduleTransactionExistException(ScheduleTransactionExistException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({BankNotAccountExistException.class})
+    public ResponseEntity<Object> handleBankNotAccountExistException(BankNotAccountExistException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({InvalidScheduleTransactionException.class})
+    public ResponseEntity<Object> handleInvalidScheduleTransactionException(InvalidScheduleTransactionException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
         LinkedHashMap<String, Object> errorsMap = new LinkedHashMap<>();
         for (ObjectError err : errors) {

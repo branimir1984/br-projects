@@ -70,7 +70,9 @@ public class Mapper {
                 addressDTO,
                 bankAccountDTOList
         );
-        return new LegalEntityResponse(legalEntity.getEmail(),
+        return new LegalEntityResponse(
+                legalEntity.getId(),
+                legalEntity.getEmail(),
                 legalEntity.getUin(),
                 personalData);
     }
@@ -105,5 +107,19 @@ public class Mapper {
             dtoResponse.put(entry.getKey(), list);
         }
         return dtoResponse;
+    }
+
+    public List<ScheduleTransactionDTO> mapToScheduleTransactionDTOList(List<ScheduleTransaction> transactionList) {
+        List<ScheduleTransactionDTO> scheduleTransactionDTOS = new ArrayList<>();
+        for (ScheduleTransaction account : transactionList) {
+            ScheduleTransactionDTO dto = new ScheduleTransactionDTO(
+                    account.getSender().getIban(),
+                    account.getRecipient().getId(),
+                    account.getRecipient().getIban(),
+                    account.getAmountPercentage(),
+                    account.getTransactionTime());
+            scheduleTransactionDTOS.add(dto);
+        }
+        return scheduleTransactionDTOS;
     }
 }
