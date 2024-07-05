@@ -10,4 +10,10 @@ public class AppConfiguration {
     public Mapper modelMapper() {
         return new Mapper();
     }
+ /*   @Bean
+    public Thread reader(ScheduleTaskReader task) {
+        Thread thread = new Thread(task);
+        thread.start();
+        return thread;
+    }*/
 }

@@ -1,11 +1,12 @@
 package bg.codeacademy.cakeShop.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record ScheduleTransactionDTO(
         @NotNull
@@ -18,21 +19,22 @@ public record ScheduleTransactionDTO(
         @NotBlank
         String recipientBankAccountIban,
         int amountPercentage,
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, fallbackPatterns = {"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"})
-        Date transactionTime
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime transactionDate
 ) {
 
     public ScheduleTransactionDTO(String senderBankAccountIban,
                                   int recipientId,
                                   String recipientBankAccountIban,
                                   int amountPercentage,
-                                  Date transactionTime
+                                  LocalDateTime transactionDate
 
     ) {
         this.senderBankAccountIban = senderBankAccountIban;
         this.recipientId = recipientId;
         this.recipientBankAccountIban = recipientBankAccountIban;
         this.amountPercentage = amountPercentage;
-        this.transactionTime = transactionTime;
+        this.transactionDate = transactionDate;
+        System.out.println(transactionDate);
     }
 }

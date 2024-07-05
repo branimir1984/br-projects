@@ -39,6 +39,7 @@ public class BankAccount {
 
     @OneToMany(mappedBy = "recipient")
     private List<ScheduleTransaction> recipient;
+
     @Override
     public String toString() {
         return "BankAccount{" +
@@ -49,5 +50,11 @@ public class BankAccount {
                 ", beneficiary=" + beneficiary +
                 ", isRental=" + isRental +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        BankAccount account = (BankAccount) obj;
+        return this.getIban().equals(account.getIban());
     }
 }

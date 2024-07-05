@@ -117,7 +117,7 @@ public class Mapper {
                     account.getRecipient().getId(),
                     account.getRecipient().getIban(),
                     account.getAmountPercentage(),
-                    account.getTransactionTime());
+                    account.getTransactionDate());
             scheduleTransactionDTOS.add(dto);
         }
         return scheduleTransactionDTOS;
