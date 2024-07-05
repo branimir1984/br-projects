@@ -1,5 +1,6 @@
 package bg.codeacademy.cakeShop.model;
 
+import bg.codeacademy.cakeShop.enums.PaymentCriteria;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,8 @@ public class ScheduleTransaction {
     private BankAccount recipient;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-   // @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime transactionDate;
+    @Enumerated(EnumType.STRING)
+    private PaymentCriteria paymentCriteria;
 
     @Column(nullable = false)
     private int amountPercentage;
@@ -40,7 +40,7 @@ public class ScheduleTransaction {
                 "id=" + id +
                 ", sender=" + sender +
                 ", recipient=" + recipient +
-                ", transactionTime=" + transactionDate +
+                ", paymentCriteria=" + paymentCriteria +
                 ", amountPercentage=" + amountPercentage +
                 '}';
     }
@@ -53,7 +53,7 @@ public class ScheduleTransaction {
         return transaction.getId() == this.getId() &&
                 equalSender &&
                 equalRecipient &&
-                transaction.getTransactionDate().equals(this.getTransactionDate()) &&
+                transaction.getPaymentCriteria().equals(this.getPaymentCriteria()) &&
                 transaction.getAmountPercentage() == this.getAmountPercentage();
     }
 }

@@ -2,6 +2,7 @@ package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
 import bg.codeacademy.cakeShop.model.BankAccount;
+import bg.codeacademy.cakeShop.model.ScheduleTransaction;
 import bg.codeacademy.cakeShop.repository.BankAccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,9 @@ public class BankAccountService {
         }
 
         return info;
+    }
+
+    public void executeTransaction(ScheduleTransaction transaction) {
+
     }
 }
