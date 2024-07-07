@@ -40,6 +40,12 @@ public class BankAccount {
     @OneToMany(mappedBy = "recipient")
     private List<ScheduleTransaction> recipient;
 
+    @OneToMany(mappedBy = "senderBankAccount")
+    private List<Transaction> senderList;
+
+    @OneToMany(mappedBy = "recipientBankAccount")
+    private List<Transaction> recipientList;
+
     @Override
     public String toString() {
         return "BankAccount{" +

@@ -1,6 +1,5 @@
 package bg.codeacademy.cakeShop.service;
 
-import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
@@ -50,7 +49,7 @@ public class LegalEntityService {
         Address address = addressService.addAddress(legalEntity.getPersonalData().getAddress());
         legalEntity.getPersonalData().setAddress(address);
         personalDataService.addPersonalData(legalEntity.getPersonalData());
-        bankAccountService.addBankAccount(legalEntity.getPersonalData().getBankAccount());
+        bankAccountService.createBankAccount(legalEntity.getPersonalData().getBankAccount());
 
         legalEntityRepository.save(legalEntity);
         return legalEntity;

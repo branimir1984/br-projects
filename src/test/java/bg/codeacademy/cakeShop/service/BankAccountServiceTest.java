@@ -28,7 +28,7 @@ class BankAccountServiceTest {
         account.setCurrency(Currency.BG);
         when(bankAccountRepository.existsBankAccountByIban(account.getIban()))
                 .thenReturn(false);
-        List<String> iban = bankAccountService.addBankAccount(List.of(account));
+        List<String> iban = bankAccountService.createBankAccount(List.of(account));
         Assertions.assertEquals(iban.get(0), account.getIban());
         verify(bankAccountRepository, times(1)).save(account);
     }
@@ -41,7 +41,7 @@ class BankAccountServiceTest {
         when(bankAccountRepository.existsBankAccountByIban(account.getIban()))
                 .thenReturn(true);
         Assertions.assertThrows(BankAccountExistException.class, () -> {
-            bankAccountService.addBankAccount(List.of(account));
+            bankAccountService.createBankAccount(List.of(account));
         });
     }
 }

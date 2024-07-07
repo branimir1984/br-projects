@@ -4,6 +4,7 @@ package bg.codeacademy.cakeShop.shedule;
 import bg.codeacademy.cakeShop.enums.PaymentCriteria;
 import bg.codeacademy.cakeShop.model.ScheduleTransaction;
 import bg.codeacademy.cakeShop.service.BankAccountService;
+import bg.codeacademy.cakeShop.service.TransactionService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -14,13 +15,13 @@ import java.util.List;
 
 @Component
 public class TransactionTaskExecutor implements Runnable {
-    private final BankAccountService bankAccountService;
+    private final TransactionService transactionService;
     private int dailyExecutionHour = 21;
     private boolean awake = false;
     private final List<ScheduleTransaction> scheduleTransactionList;
 
-    public TransactionTaskExecutor(BankAccountService bankAccountService) {
-        this.bankAccountService = bankAccountService;
+    public TransactionTaskExecutor(TransactionService transactionService) {
+        this.transactionService = transactionService;
         scheduleTransactionList = new ArrayList<>();
     }
 
@@ -41,20 +42,28 @@ public class TransactionTaskExecutor implements Runnable {
             }
             while (awake) {
                 LocalDateTime lt = LocalDateTime.now();
-                for (ScheduleTransaction transaction : scheduleTransactionList) {
-                    if (transaction.getPaymentCriteria().equals(PaymentCriteria.DAILY)) {
+                for (ScheduleTransaction task : scheduleTransactionList) {
+                    if (task.getPaymentCriteria().equals(PaymentCriteria.DAILY)) {
                         if (lt.getHour() == dailyExecutionHour) {
-                            bankAccountService.executeTransaction(transaction);
+                            transactionService.createTransaction(
+                                    task.getSender().getBeneficiary().getId(),
+                                    task.getSender().getIban(),
+                                    task.getRecipient().getIban(),
+                                    task.getAmountPercentage());
                         }
-                    } else if (transaction.getPaymentCriteria().equals(PaymentCriteria.MONTHLY)) {
+                    } else if (task.getPaymentCriteria().equals(PaymentCriteria.MONTHLY)) {
                         LocalDate now = LocalDate.now();
                         LocalDate lastDay = now.with(TemporalAdjusters.lastDayOfMonth());
-                        if (now.equals(lastDay)) {
-                            bankAccountService.executeTransaction(transaction);
+                        if (now == lastDay) {
+                            transactionService.createTransaction(
+                                    task.getSender().getBeneficiary().getId(),
+                                    task.getSender().getIban(),
+                                    task.getRecipient().getIban(),
+                                    task.getAmountPercentage());
                         }
                     }
                 }
-                Thread.sleep(3600000);
+                Thread.sleep(60000);
             }
 
         } catch (InterruptedException e) {
@@ -70,4 +79,15 @@ public class TransactionTaskExecutor implements Runnable {
             }
         }
     }
+
+    /*private Transaction formTransaction(ScheduleTransaction task) {
+        BankAccount senderBankAccount = task.getSender();
+        BankAccount recipientBankAccount = task.getRecipient();
+        Transaction transaction = new Transaction();
+        transaction.setSenderBankAccount(senderBankAccount);
+        transaction.setRecipientBankAccount(recipientBankAccount);
+        transaction.setDateTime(LocalDateTime.now());
+        transaction.setAmount(12);
+        return transaction;
+    }*/
 }

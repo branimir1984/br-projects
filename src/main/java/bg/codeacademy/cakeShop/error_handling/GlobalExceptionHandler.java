@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -91,8 +90,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler({BankNotAccountExistException.class})
-    public ResponseEntity<Object> handleBankNotAccountExistException(BankNotAccountExistException exception) {
+    @ExceptionHandler({BankAccountNotExistException.class})
+    public ResponseEntity<Object> handleBankNotAccountExistException(BankAccountNotExistException exception) {
         exception.printStackTrace(System.out);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -106,7 +105,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
-
+    @ExceptionHandler({TransactionException.class})
+    public ResponseEntity<Object> handleTransactionException(TransactionException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status, WebRequest request) {

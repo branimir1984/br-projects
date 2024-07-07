@@ -114,7 +114,6 @@ public class Mapper {
         for (ScheduleTransaction account : transactionList) {
             ScheduleTransactionDTO dto = new ScheduleTransactionDTO(
                     account.getSender().getIban(),
-                    account.getRecipient().getId(),
                     account.getRecipient().getIban(),
                     account.getAmountPercentage(),
                     String.valueOf(account.getPaymentCriteria()));

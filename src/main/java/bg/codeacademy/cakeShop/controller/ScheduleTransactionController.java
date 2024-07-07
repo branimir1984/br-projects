@@ -27,10 +27,14 @@ public class ScheduleTransactionController {
     public ResponseEntity<String> createScheduleTransaction(
             Authentication authentication, @Valid @RequestBody ScheduleTransactionDTO dto) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        System.out.println("principal id="+user.getId());
         return new ResponseEntity<>(
                 "http://localhost:8080/api/v1/legal-entities/bank-accounts/schedule-transactions/?id="
-                        + scheduleTransactionService.createScheduleTransaction(user.getId(), dto.senderBankAccountIban(),
-                        dto.recipientId(), dto.recipientBankAccountIban(), dto.amountPercentage(),
+                        + scheduleTransactionService.createScheduleTransaction(
+                        user.getId(),
+                        dto.senderBankAccountIban(),
+                        dto.recipientBankAccountIban(),
+                        dto.amountPercentage(),
                         PaymentCriteria.valueOf(dto.paymentCriteria())).getId(),
                 HttpStatus.CREATED);
     }

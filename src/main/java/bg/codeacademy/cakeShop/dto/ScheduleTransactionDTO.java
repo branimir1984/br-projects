@@ -9,7 +9,6 @@ public record ScheduleTransactionDTO(
         @NotEmpty
         @NotBlank
         String senderBankAccountIban,
-        int recipientId,
         @NotNull
         @NotEmpty
         @NotBlank
@@ -19,14 +18,12 @@ public record ScheduleTransactionDTO(
 ) {
 
     public ScheduleTransactionDTO(String senderBankAccountIban,
-                                  int recipientId,
                                   String recipientBankAccountIban,
                                   int amountPercentage,
                                   String paymentCriteria
 
     ) {
         this.senderBankAccountIban = senderBankAccountIban;
-        this.recipientId = recipientId;
         this.recipientBankAccountIban = recipientBankAccountIban;
         this.amountPercentage = amountPercentage;
         this.paymentCriteria = paymentCriteria;
