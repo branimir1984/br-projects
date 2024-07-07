@@ -13,9 +13,13 @@ import javax.naming.Context;
 
 @SpringBootApplication
 public class CakeShopApplication {
+    private static ApplicationContext context = null;
+    public CakeShopApplication(ApplicationContext context) {
+       CakeShopApplication.context = context;
+    }
     public static void main(String[] args) {
         SpringApplication.run(CakeShopApplication.class, args);
-
+        TransactionTaskExecutor taskExecutor = context.getBean(TransactionTaskExecutor.class);
+        taskExecutor.start();
     }
-
 }
