@@ -23,15 +23,12 @@ public class ScheduleTransactionService {
     public final ScheduleTransactionRepository scheduleTransactionRepository;
     public final BankAccountService bankAccountService;
     private final ApplicationContext springContext;
-    private final TransactionTaskExecutor taskExecutor;
 
     public ScheduleTransactionService(ScheduleTransactionRepository scheduleTransactionRepository,
                                       BankAccountService bankAccountService, ApplicationContext springContext) {
         this.scheduleTransactionRepository = scheduleTransactionRepository;
         this.bankAccountService = bankAccountService;
         this.springContext = springContext;
-        taskExecutor = this.springContext.getBean(TransactionTaskExecutor.class);
-        taskExecutor.start();
     }
 
     public ScheduleTransaction createScheduleTransaction(
@@ -58,7 +55,7 @@ public class ScheduleTransactionService {
             throw new ScheduleTransactionExistException("Schedule transaction exist!");
         }
         scheduleTransactionRepository.save(transaction);
-
+        TransactionTaskExecutor taskExecutor = springContext.getBean(TransactionTaskExecutor.class);
         taskExecutor.updateTaskList(scheduleTransactionRepository.findAll());
         return transaction;
     }
