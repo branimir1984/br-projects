@@ -61,7 +61,7 @@ class StaffServiceTest {
             verify(personalDataService
                     , times(i + 1)).addPersonalData(staff.getPersonalData());
             verify(bankAccountService
-                    , times(i + 1)).addBankAccount(staff.getPersonalData().getBankAccount());
+                    , times(i + 1)).createBankAccount(staff.getPersonalData().getBankAccount());
             verify(legalEntityService
                     , times(i + 1)).getLegalEntity(4);
 

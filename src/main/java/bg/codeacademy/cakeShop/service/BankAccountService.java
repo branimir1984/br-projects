@@ -1,6 +1,7 @@
 package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
+import bg.codeacademy.cakeShop.error_handling.exception.BankAccountNotExistException;
 import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.repository.BankAccountRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class BankAccountService {
         this.bankAccountRepository = bankAccountRepository;
     }
 
-    public List<String> addBankAccount(List<BankAccount> bankAccount) {
+    public List<String> createBankAccount(List<BankAccount> bankAccount) {
         List<String> info = new LinkedList<>();
         for (BankAccount account : bankAccount) {
             if (bankAccountRepository.existsBankAccountByIban(account.getIban())) {
@@ -28,5 +29,25 @@ public class BankAccountService {
         }
 
         return info;
+    }
+
+    public BankAccount getBankAccount(int id, String iban) {
+        BankAccount account = bankAccountRepository.findBankAccountByBeneficiary_idAndIban(id, iban);
+        if (account == null) {
+            throw new BankAccountNotExistException("Not found bank account for user ID:" + id);
+        }
+        return account;
+    }
+
+    public BankAccount getBankAccount(String iban) {
+        BankAccount account = bankAccountRepository.findBankAccountByIban(iban);
+        if (account == null) {
+            throw new BankAccountNotExistException("Not found bank account with IBAN:" + iban);
+        }
+        return account;
+    }
+
+    public void update(BankAccount senderAccount) {
+        bankAccountRepository.save(senderAccount);
     }
 }

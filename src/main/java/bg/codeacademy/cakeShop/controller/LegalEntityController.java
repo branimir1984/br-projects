@@ -3,10 +3,12 @@ package bg.codeacademy.cakeShop.controller;
 import bg.codeacademy.cakeShop.dto.LegalEntityRegistrationDTO;
 import bg.codeacademy.cakeShop.dto.LegalEntityResponse;
 import bg.codeacademy.cakeShop.dto.OfferResponceDTO;
+import bg.codeacademy.cakeShop.dto.ScheduleTransactionDTO;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.Offer;
+import bg.codeacademy.cakeShop.model.ScheduleTransaction;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.LegalEntityService;
 import jakarta.validation.Valid;
@@ -67,5 +69,15 @@ public class LegalEntityController {
         Map<String, List<Offer>> offers = legalEntityService.getOffers(user.getId());
         Map<String, List<OfferResponceDTO>> dtoList = mapper.mapToOfferResponceDTOList(offers);
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_SHOP')")
+    @GetMapping("/bank-accounts/schedule-transactions")
+    public ResponseEntity<List<ScheduleTransactionDTO>> getScheduleTransactions(
+            Authentication authentication) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        List<ScheduleTransaction> transactionList = legalEntityService.getScheduleTransactions(user.getId());
+        List<ScheduleTransactionDTO> transactionDtoList = mapper.mapToScheduleTransactionDTOList(transactionList);
+        return new ResponseEntity<>(transactionDtoList, HttpStatus.OK);
     }
 }

@@ -35,7 +35,7 @@ public class StaffService {
         Address address = addressService.addAddress(personalData.getAddress());
         personalData.setAddress(address);
         personalDataService.addPersonalData(personalData);
-        bankAccountService.addBankAccount(personalData.getBankAccount());
+        bankAccountService.createBankAccount(personalData.getBankAccount());
 
         LegalEntity legalEntity = legalEntityService.getLegalEntity(principalId);
 

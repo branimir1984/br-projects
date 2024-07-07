@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -32,6 +34,18 @@ public class BankAccount {
 
     private boolean isRental;
 
+    @OneToMany(mappedBy = "sender")
+    private List<ScheduleTransaction> sender;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<ScheduleTransaction> recipient;
+
+    @OneToMany(mappedBy = "senderBankAccount")
+    private List<Transaction> senderList;
+
+    @OneToMany(mappedBy = "recipientBankAccount")
+    private List<Transaction> recipientList;
+
     @Override
     public String toString() {
         return "BankAccount{" +
@@ -42,5 +56,11 @@ public class BankAccount {
                 ", beneficiary=" + beneficiary +
                 ", isRental=" + isRental +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        BankAccount account = (BankAccount) obj;
+        return this.getIban().equals(account.getIban());
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -83,8 +82,39 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler({ScheduleTransactionExistException.class})
+    public ResponseEntity<Object> handleScheduleTransactionExistException(ScheduleTransactionExistException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({BankAccountNotExistException.class})
+    public ResponseEntity<Object> handleBankNotAccountExistException(BankAccountNotExistException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({InvalidScheduleTransactionException.class})
+    public ResponseEntity<Object> handleInvalidScheduleTransactionException(InvalidScheduleTransactionException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+    @ExceptionHandler({TransactionException.class})
+    public ResponseEntity<Object> handleTransactionException(TransactionException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
         LinkedHashMap<String, Object> errorsMap = new LinkedHashMap<>();
         for (ObjectError err : errors) {
