@@ -21,7 +21,7 @@ public class TransactionService {
 
     @Transactional
     public Transaction createTransaction(int principalId, String senderIban,
-                                  String recipientIban, int amountPercentage) {
+                                         String recipientIban, int amountPercentage) {
         BankAccount senderAccount = bankAccountService.getBankAccount(principalId, senderIban);
         BankAccount recipientAccount = bankAccountService.getBankAccount(recipientIban);
 
