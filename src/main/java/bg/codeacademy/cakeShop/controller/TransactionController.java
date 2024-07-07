@@ -31,15 +31,15 @@ public class TransactionController {
 
     @PreAuthorize("hasRole('ROLE_SHOP')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createOffer(
+    public ResponseEntity<String> createTransaction(
             Authentication authentication, @Valid @RequestBody TransactionDTO dto) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         return new ResponseEntity<>("http://localhost:8080/api/v1/transactions/?id="
-                + transactionService.createTransaction(
-                user.getId(),
+              + transactionService.createTransaction(
+                      user.getId(),
                 dto.senderIban(),
                 dto.recipientIban(),
                 dto.amountPercentage()
-        ).getId(), HttpStatus.CREATED);
+                ).getId(), HttpStatus.CREATED);
     }
 }
