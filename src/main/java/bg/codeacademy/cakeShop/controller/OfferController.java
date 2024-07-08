@@ -2,6 +2,7 @@ package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.OfferDTO;
 import bg.codeacademy.cakeShop.dto.PersonalDataDTO;
+import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.model.PersonalData;
@@ -35,8 +36,8 @@ public class OfferController {
     public ResponseEntity<String> createOffer(
             Authentication authentication, @Valid @RequestBody OfferDTO dto) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
-        return new ResponseEntity<>("http://localhost:8080/api/v1/legal-entities/deliver/?id="
-                + user.getId() + "/offers/?id=" + offerService
-                .createOffer(user.getId(), dto.offeredId(), dto.money()).getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>("http://localhost:8080/api/v1/legal-entities/offers/?id="
+                + user.getId() + offerService
+                .createOffer(user.getId(), dto.offeredId(), dto.money(), Currency.valueOf(dto.currency())).getId(), HttpStatus.CREATED);
     }
 }

@@ -1,11 +1,9 @@
 package bg.codeacademy.cakeShop.controller;
 
-import bg.codeacademy.cakeShop.dto.LegalEntityRegistrationDTO;
-import bg.codeacademy.cakeShop.dto.LegalEntityResponse;
-import bg.codeacademy.cakeShop.dto.OfferResponceDTO;
-import bg.codeacademy.cakeShop.dto.ScheduleTransactionDTO;
+import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.mapper.Mapper;
+import bg.codeacademy.cakeShop.model.Contract;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.model.ScheduleTransaction;
@@ -27,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 @EnableMethodSecurity
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(securedEnabled = true)
 @RestController
 @RequestMapping("/api/v1/legal-entities")
 public class LegalEntityController {
@@ -78,6 +76,16 @@ public class LegalEntityController {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         List<ScheduleTransaction> transactionList = legalEntityService.getScheduleTransactions(user.getId());
         List<ScheduleTransactionDTO> transactionDtoList = mapper.mapToScheduleTransactionDTOList(transactionList);
+        return new ResponseEntity<>(transactionDtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_RENTIER', 'ROLE_DELIVER')")
+    @GetMapping("/contracts")
+    public ResponseEntity<Map<String, List<ContractDTO>>> getContracts(
+            Authentication authentication) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        Map<String, List<Contract>> transactionList = legalEntityService.getLegalEntityContracts(user.getId());
+        Map<String, List<ContractDTO>> transactionDtoList = mapper.mapToTransactionListDto(transactionList);
         return new ResponseEntity<>(transactionDtoList, HttpStatus.OK);
     }
 }

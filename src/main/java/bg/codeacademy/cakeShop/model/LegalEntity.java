@@ -31,4 +31,13 @@ public class LegalEntity {
 
     @OneToMany(mappedBy = "offered")
     private List<Offer> offered;
+
+    @OneToMany(mappedBy = "offeror")
+    private List<Contract> contactsFromMe;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Contract> contractsToMe;
+
+    @OneToMany(mappedBy = "assessed")
+    private List<Comment> comments;
 }

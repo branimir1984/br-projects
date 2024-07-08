@@ -27,7 +27,6 @@ public class Comment {
     private LocalDateTime dob;
 
     @ManyToOne
-    @Column(nullable = false)
-    private int assessed;
-
+    @JoinColumn(name = "assessed")
+    private LegalEntity assessed;
 }

@@ -17,17 +17,24 @@ public record OfferResponceDTO(
         @NotNull
         String offerorPersonalName,
         @Email
-        String offerorEmail
+        String offerorEmail,
+        @NotBlank
+        @NotEmpty
+        @NotNull
+        String contractIdentifier
+
 ) {
 
     public OfferResponceDTO(float money,
                             String offerorUin,
                             String offerorPersonalName,
-                            String offerorEmail
+                            String offerorEmail,
+                            String contractIdentifier
     ) {
         this.money = money;
         this.offerorUin = offerorUin;
         this.offerorPersonalName = offerorPersonalName;
         this.offerorEmail = offerorEmail;
+        this.contractIdentifier = contractIdentifier;
     }
 }
