@@ -32,16 +32,25 @@ class OfferServiceTest {
         LegalEntity offered = formLegalEntity("B");
         Contract contract = formContract(offeror, offered);
         Offer offer = formOffer("A", "B");
-        when(legalEntityService.getLegalEntity(1))
+        when(legalEntityService.getLegalEntity(0))
                 .thenReturn(offeror);
         when(legalEntityService.getLegalEntity(2))
                 .thenReturn(offered);
         when(offerRepository.existsOfferByOfferorAndMoney(offer.getOfferor(), offer.getMoney()))
                 .thenReturn(false);
-        Offer response = offerService.createOffer(1, 2, 200, Currency.BG);
+        when(contractService.createContract(
+                contract.getOfferor().getId(),
+                contract.getAmount(),
+                String.valueOf(contract.getCurrency()),
+                contract.getRecipient().getUin())).thenReturn(contract);
+        Offer response = offerService.createOffer(0, 2, 100, Currency.BG);
+        verify(contractService, times(1)).createContract(
+                contract.getOfferor().getId(),
+                contract.getAmount(),
+                String.valueOf(contract.getCurrency()),
+                contract.getRecipient().getUin());
         verify(offerRepository, times(1)).save(response);
     }
-
 
     @Test
     void shouldThrowInvalidOfferException() {
