@@ -47,7 +47,12 @@ public class BankAccountService {
         return account;
     }
 
-    public void update(BankAccount senderAccount) {
-        bankAccountRepository.save(senderAccount);
+    public BankAccount update(BankAccount account) {
+        boolean isExist = bankAccountRepository.existsById(account.getId());
+        if (!isExist) {
+            throw new BankAccountNotExistException("Not found bank account with ID:" + account.getId());
+        }
+        bankAccountRepository.save(account);
+        return account;
     }
 }
