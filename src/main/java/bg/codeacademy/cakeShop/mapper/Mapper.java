@@ -91,16 +91,14 @@ public class Mapper {
         Map<String, List<OfferResponceDTO>> dtoResponse = new HashMap<>();
 
         for (Map.Entry<String, List<Offer>> entry : offers.entrySet()) {
-            System.out.println("Key = " + entry.getKey() +
-                    ", Value = " + entry.getValue());
             List<OfferResponceDTO> list = new ArrayList<>();
-
             for (Offer of : entry.getValue()) {
                 OfferResponceDTO offerResponse = new OfferResponceDTO(
                         of.getMoney(),
                         of.getOfferor().getUin(),
                         of.getOfferor().getPersonalData().getPersonalName(),
-                        of.getOfferor().getEmail()
+                        of.getOfferor().getEmail(),
+                        of.getContract().getIdentifier()
                 );
                 list.add(offerResponse);
             }
@@ -120,5 +118,22 @@ public class Mapper {
             scheduleTransactionDTOS.add(dto);
         }
         return scheduleTransactionDTOS;
+    }
+
+    public Map<String, List<ContractDTO>> mapToTransactionListDto(Map<String, List<Contract>> contractList) {
+        Map<String, List<ContractDTO>> dtoResponse = new HashMap<>();
+        for (Map.Entry<String, List<Contract>> entry : contractList.entrySet()) {
+            List<ContractDTO> list = new ArrayList<>();
+            for (Contract of : entry.getValue()) {
+                ContractDTO contractDto = new ContractDTO(
+                        of.getAmount(),
+                        String.valueOf(of.getCurrency()),
+                        of.getRecipient().getUin()
+                );
+                list.add(contractDto);
+            }
+            dtoResponse.put(entry.getKey(), list);
+        }
+        return dtoResponse;
     }
 }

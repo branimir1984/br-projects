@@ -8,4 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface LegalEntityRepository extends CrudRepository<LegalEntity, Integer> {
     boolean existsLegalEntityByUin(String uin);
     LegalEntity findLegalEntityByPersonalData_id(int id);
+
+    LegalEntity findLegalEntityByUin(String uin);
 }

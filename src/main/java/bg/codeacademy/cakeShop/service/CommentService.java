@@ -16,10 +16,6 @@ public class CommentService {
     }
 
     public Comment addComment(Comment comment) {
-        if (commentRepository.existsCommentByAssessed(comment.getId())) {
-            throw new UniqueIdentificationNumberExistException("Comment with ID:"
-                    + comment.getId() + " has already been posted!");
-        }
         commentRepository.save(comment);
         return comment;
     }

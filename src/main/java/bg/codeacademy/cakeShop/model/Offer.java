@@ -25,4 +25,8 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "offered")
     private LegalEntity offered;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contract")
+    private Contract contract;
 }

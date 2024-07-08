@@ -1,5 +1,6 @@
 package bg.codeacademy.cakeShop.service;
 
+import bg.codeacademy.cakeShop.dto.ContractDTO;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
@@ -64,6 +65,15 @@ public class LegalEntityService {
         }
     }
 
+    public LegalEntity getLegalEntity(String uin) {
+        LegalEntity legalEntity = legalEntityRepository.findLegalEntityByUin(uin);
+        if (legalEntity != null) {
+            return legalEntity;
+        } else {
+            throw new LegalEntityNotFoundException("Legal entity with uin:" + uin + " not found!");
+        }
+    }
+
     public List<LegalEntity> getLegalEntities() {
         return (List<LegalEntity>) legalEntityRepository.findAll();
     }
@@ -88,5 +98,13 @@ public class LegalEntityService {
         System.out.println(myTransactions.size()
         );
         return myTransactions;
+    }
+
+    public Map<String, List<Contract>> getLegalEntityContracts(int id) {
+        LegalEntity entity = getLegalEntity(id);
+        Map<String, List<Contract>> allContracts = new HashMap<>();
+        allContracts.put("contractsFromMe", entity.getContactsFromMe());
+        allContracts.put("contractsToMe", entity.getContractsToMe());
+        return allContracts;
     }
 }

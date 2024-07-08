@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"offeror", "recipient"})})
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
