@@ -3,7 +3,6 @@ package bg.codeacademy.cakeShop.service;
 import bg.codeacademy.cakeShop.model.Comment;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.CommentRepository;
-import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import org.springframework.stereotype.Service;
 
 import static java.time.LocalDateTime.now;
