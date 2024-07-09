@@ -3,10 +3,7 @@ package bg.codeacademy.cakeShop.controller;
 import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.mapper.Mapper;
-import bg.codeacademy.cakeShop.model.Contract;
-import bg.codeacademy.cakeShop.model.LegalEntity;
-import bg.codeacademy.cakeShop.model.Offer;
-import bg.codeacademy.cakeShop.model.ScheduleTransaction;
+import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.LegalEntityService;
 import jakarta.validation.Valid;
@@ -87,5 +84,15 @@ public class LegalEntityController {
         Map<String, List<Contract>> transactionList = legalEntityService.getLegalEntityContracts(user.getId());
         Map<String, List<ContractDTO>> transactionDtoList = mapper.mapToTransactionListDto(transactionList);
         return new ResponseEntity<>(transactionDtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_RENTIER', 'ROLE_DELIVER')")
+    @GetMapping("/comments")
+    public ResponseEntity<List<CommentResponseDTO>> getComments(
+            Authentication authentication) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        List<Comment> commentList = legalEntityService.getComments(user.getId());
+        List<CommentResponseDTO> commentDtoList = mapper.mapToCommentListDto(commentList);
+        return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
     }
 }

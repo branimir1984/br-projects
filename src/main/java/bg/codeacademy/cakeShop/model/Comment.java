@@ -23,8 +23,7 @@ public class Comment {
     private String comment;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime dob;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "assessed")

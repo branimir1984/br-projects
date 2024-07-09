@@ -34,7 +34,6 @@ class TransactionServiceTest {
         float amount = calculatePercentage(senderAccount.getAmount(), percentage);
         float newSenderAmount = senderAccount.getAmount() - amount;
         senderAccount.setAmount(newSenderAmount);
-        doNothing().when(bankAccountService).update(senderAccount);
         Transaction response = transactionService.createTransaction(
                 principal, senderAccount.getIban(), recipientAccount.getIban(), percentage);
         verify(bankAccountService, times(1)).update(senderAccount);
