@@ -1,21 +1,31 @@
 package bg.codeacademy.cakeShop.service;
 
-import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
-import bg.codeacademy.cakeShop.model.Address;
 import bg.codeacademy.cakeShop.model.Comment;
+import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.CommentRepository;
+import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import org.springframework.stereotype.Service;
+
+import static java.time.LocalDateTime.now;
 
 @Service
 public class CommentService {
 
-    public final CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final LegalEntityService legalEntityService;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          LegalEntityService legalEntityService) {
         this.commentRepository = commentRepository;
+        this.legalEntityService = legalEntityService;
     }
 
-    public Comment addComment(Comment comment) {
+    public Comment createComment(String uin, String text) {
+        Comment comment = new Comment();
+        LegalEntity assessed = legalEntityService.getLegalEntity(uin);
+        comment.setAssessed(assessed);
+        comment.setComment(text);
+        comment.setDate(now());
         commentRepository.save(comment);
         return comment;
     }

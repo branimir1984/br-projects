@@ -107,4 +107,9 @@ public class LegalEntityService {
         allContracts.put("contractsToMe", entity.getContractsToMe());
         return allContracts;
     }
+
+    public List<Comment> getComments(int id) {
+        LegalEntity entity = getLegalEntity(id);
+        return entity.getComments();
+    }
 }

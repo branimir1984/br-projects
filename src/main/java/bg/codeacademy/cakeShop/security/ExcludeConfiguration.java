@@ -11,6 +11,7 @@ public class ExcludeConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/legal-entities"));
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/legal-entities"))
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/comments"));
     }
 }

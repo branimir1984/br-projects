@@ -136,4 +136,16 @@ public class Mapper {
         }
         return dtoResponse;
     }
+
+    public List<CommentResponseDTO> mapToCommentListDto(List<Comment> commentList) {
+        List<CommentResponseDTO> comments = new ArrayList<>();
+        for (Comment c : commentList) {
+            CommentResponseDTO dto = new CommentResponseDTO(
+                    c.getComment(),
+                    c.getAssessed().getUin(),
+                    c.getDate());
+            comments.add(dto);
+        }
+        return comments;
+    }
 }

@@ -4,7 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record CommentDTO(
+import java.time.LocalDateTime;
+
+public record CommentResponseDTO(
         @NotEmpty
         @NotNull
         @NotBlank
@@ -12,6 +14,7 @@ public record CommentDTO(
         @NotEmpty
         @NotNull
         @NotBlank
-        String uin
+        String uin,
+        LocalDateTime date
 ) {
 }
