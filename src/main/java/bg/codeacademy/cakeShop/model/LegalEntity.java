@@ -40,4 +40,7 @@ public class LegalEntity {
 
     @OneToMany(mappedBy = "assessed")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Turnover> dailyTurnover;
 }
