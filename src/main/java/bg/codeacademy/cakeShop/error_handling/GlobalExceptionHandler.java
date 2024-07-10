@@ -105,6 +105,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({TransactionException.class})
     public ResponseEntity<Object> handleTransactionException(TransactionException exception) {
         exception.printStackTrace(System.out);
@@ -112,6 +113,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
     @ExceptionHandler({InvalidContractException.class})
     public ResponseEntity<Object> handleInvalidContractException(InvalidContractException exception) {
         exception.printStackTrace(System.out);
@@ -119,6 +121,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler({ContractNotFoundException.class})
+    public ResponseEntity<Object> handleContractNotFoundException(ContractNotFoundException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({ContractAlreadyValidatedException.class})
+    public ResponseEntity<Object> handleContractAlreadyValidatedException(ContractAlreadyValidatedException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status, WebRequest request) {

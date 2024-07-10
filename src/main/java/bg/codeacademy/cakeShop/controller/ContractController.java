@@ -1,7 +1,7 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.ContractDTO;
-import bg.codeacademy.cakeShop.dto.LegalEntityRegistrationDTO;
+import bg.codeacademy.cakeShop.dto.ContractResponseDTO;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.ContractService;
@@ -36,5 +36,13 @@ public class ContractController {
                         dto.currency(),
                         dto.recipientUin()
                 ).getId(), HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_RENTIER')")
+    @PatchMapping
+    public ResponseEntity<String> validateContract(
+            Authentication authentication, @Valid @RequestParam String identifier) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        return new ResponseEntity<>(contractService.validateContract(user.getId(),identifier).getIdentifier(), HttpStatus.OK);
     }
 }

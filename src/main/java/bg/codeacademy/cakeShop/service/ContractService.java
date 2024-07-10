@@ -2,12 +2,17 @@ package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Status;
+import bg.codeacademy.cakeShop.error_handling.exception.ContractAlreadyValidatedException;
+import bg.codeacademy.cakeShop.error_handling.exception.ContractNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.InvalidContractException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.Contract;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.ContractRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ContractService {
@@ -39,6 +44,27 @@ public class ContractService {
         contract.setOfferor(offeror);
         contract.setRecipient(recipient);
         contract.setStatus(Status.PENDING);
+        contractRepository.save(contract);
+        return contract;
+    }
+
+    @Transactional
+    public Contract validateContract(int id, String identifier) {
+        Contract contract = contractRepository.findContractByIdentifier(identifier);
+        if (contract == null) {
+            throw new ContractNotFoundException("Contract with identifier:" + identifier + " not found!");
+        }
+        LegalEntity legalEntity = legalEntityService.getLegalEntity(id);
+        List<Contract> recipientContracts = legalEntity.getContractsToMe();
+        if (!recipientContracts.contains(contract)) {
+            throw new ContractNotFoundException("User with UIN:" + legalEntity.getUin()
+                    + " have no contract with identifier:" + identifier);
+        }
+        if (contract.getStatus().equals(Status.PENDING)) {
+            contract.setStatus(Status.SIGNED);
+        } else {
+            throw new ContractAlreadyValidatedException("Contract is already validated");
+        }
         contractRepository.save(contract);
         return contract;
     }
