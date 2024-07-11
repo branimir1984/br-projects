@@ -120,15 +120,18 @@ public class Mapper {
         return scheduleTransactionDTOS;
     }
 
-    public Map<String, List<ContractDTO>> mapToTransactionListDto(Map<String, List<Contract>> contractList) {
-        Map<String, List<ContractDTO>> dtoResponse = new HashMap<>();
+    public Map<String, List<ContractResponseDTO>> mapToContractListDto(Map<String, List<Contract>> contractList) {
+        Map<String, List<ContractResponseDTO>> dtoResponse = new HashMap<>();
         for (Map.Entry<String, List<Contract>> entry : contractList.entrySet()) {
-            List<ContractDTO> list = new ArrayList<>();
+            List<ContractResponseDTO> list = new ArrayList<>();
             for (Contract of : entry.getValue()) {
-                ContractDTO contractDto = new ContractDTO(
+                ContractResponseDTO contractDto = new ContractResponseDTO(
+                        of.getIdentifier(),
                         of.getAmount(),
                         String.valueOf(of.getCurrency()),
-                        of.getRecipient().getUin()
+                        of.getOfferor().getUin(),
+                        of.getRecipient().getUin(),
+                        String.valueOf(of.getStatus())
                 );
                 list.add(contractDto);
             }

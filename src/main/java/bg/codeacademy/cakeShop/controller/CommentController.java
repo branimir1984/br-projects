@@ -1,17 +1,12 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.CommentDTO;
-import bg.codeacademy.cakeShop.dto.ContractDTO;
 import bg.codeacademy.cakeShop.mapper.Mapper;
-import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.CommentService;
-import bg.codeacademy.cakeShop.service.ContractService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
