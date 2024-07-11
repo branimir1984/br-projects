@@ -30,10 +30,11 @@ class ContractServiceTest {
     void shouldCreateContract() {
         LegalEntity offeror = formLegalEntity("A");
         LegalEntity recipient = formLegalEntity("B");
+        Contract contract1 = formContract("", offeror, recipient);
         when(legalEntityService.getLegalEntity(1)).thenReturn(offeror);
         when(legalEntityService.getLegalEntity("B")).thenReturn(recipient);
-        when(contractRepository.existsContractByOfferorAndRecipient(
-                offeror, recipient)).thenReturn(false);
+        when(contractRepository.findContractByOfferorAndRecipientAndStatus(
+                offeror, recipient,Status.PENDING)).thenReturn(contract1);
         String ident = offeror.getPersonalData().getUserRole() + "-" +
                 recipient.getPersonalData().getUserRole() + "-" + offeror.getPersonalData().getId();
         Contract contract = new Contract();
@@ -62,10 +63,12 @@ class ContractServiceTest {
     void shouldThrowUniqueIdentificationNumberExistException() {
         LegalEntity offeror = formLegalEntity("A");
         LegalEntity recipient = formLegalEntity("B");
+        Contract contract1 = formContract("", offeror, recipient);
+        contract1.setStatus(Status.SIGNED);
         when(legalEntityService.getLegalEntity(1)).thenReturn(offeror);
         when(legalEntityService.getLegalEntity("B")).thenReturn(recipient);
-        when(contractRepository.existsContractByOfferorAndRecipient(
-                offeror, recipient)).thenReturn(true);
+        when(contractRepository.findContractByOfferorAndRecipientAndStatus(
+                offeror, recipient,Status.SIGNED)).thenReturn(contract1);
         Assertions.assertThrows(UniqueIdentificationNumberExistException.class, () -> {
             contractService.createContract(1, 100, "BG", "B");
         });
