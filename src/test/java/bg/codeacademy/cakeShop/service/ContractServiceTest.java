@@ -2,6 +2,8 @@ package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Status;
+import bg.codeacademy.cakeShop.error_handling.exception.ContractAlreadyValidatedException;
+import bg.codeacademy.cakeShop.error_handling.exception.ContractNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.InvalidContractException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.*;
@@ -67,6 +69,64 @@ class ContractServiceTest {
         Assertions.assertThrows(UniqueIdentificationNumberExistException.class, () -> {
             contractService.createContract(1, 100, "BG", "B");
         });
+    }
+
+    @Test
+    void shouldValidateContract() {
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity recipient = formLegalEntity("B");
+        Contract contract = formContract("SHOP-DELIVER-1", offeror, recipient);
+        recipient.setContractsToMe(List.of(contract));
+        when(contractRepository.findContractByIdentifier("SHOP-DELIVER-1")).thenReturn(contract);
+        when(legalEntityService.getLegalEntity(1)).thenReturn(recipient);
+        Contract response = contractService.validateContract(1, "SHOP-DELIVER-1");
+        Assertions.assertEquals(Status.SIGNED, response.getStatus());
+        verify(contractRepository, times(1)).save(contract);
+    }
+
+    @Test
+    void shouldThrowContractNotFoundExceptionWhenSearchForContract() {
+        when(contractRepository.findContractByIdentifier("SHOP-DELIVER-1")).thenReturn(null);
+        Assertions.assertThrows(ContractNotFoundException.class, () -> {
+            contractService.validateContract(1, "");
+        });
+    }
+
+    @Test
+    void shouldThrowContractNotFoundExceptionWhenSearchInLegalEntityContractsList() {
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity recipient = formLegalEntity("B");
+        Contract contract = formContract("SHOP-DELIVER-1", offeror, recipient);
+        when(contractRepository.findContractByIdentifier("SHOP-DELIVER-1")).thenReturn(contract);
+        when(legalEntityService.getLegalEntity(1)).thenReturn(recipient);
+        Assertions.assertThrows(ContractNotFoundException.class, () -> {
+            contractService.validateContract(1, "");
+        });
+    }
+
+    @Test
+    void shouldThrowContractAlreadyValidatedException() {
+        LegalEntity offeror = formLegalEntity("A");
+        LegalEntity recipient = formLegalEntity("B");
+        Contract contract = formContract("SHOP-DELIVER-1", offeror, recipient);
+        recipient.setContractsToMe(List.of(contract));
+        when(contractRepository.findContractByIdentifier("SHOP-DELIVER-1")).thenReturn(contract);
+        when(legalEntityService.getLegalEntity(1)).thenReturn(recipient);
+        contract.setStatus(Status.SIGNED);
+        Assertions.assertThrows(ContractAlreadyValidatedException.class, () -> {
+            contractService.validateContract(1, "SHOP-DELIVER-1");
+        });
+    }
+
+    private Contract formContract(String identificator, LegalEntity offeror, LegalEntity recipient) {
+        Contract contract = new Contract();
+        contract.setIdentifier(identificator);
+        contract.setAmount(100);
+        contract.setCurrency(Currency.BG);
+        contract.setOfferor(offeror);
+        contract.setRecipient(recipient);
+        contract.setStatus(Status.PENDING);
+        return contract;
     }
 
     private LegalEntity formLegalEntity(String uin) {

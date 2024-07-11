@@ -43,6 +43,6 @@ public class ContractController {
     public ResponseEntity<String> validateContract(
             Authentication authentication, @Valid @RequestParam String identifier) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
-        return new ResponseEntity<>(contractService.validateContract(user.getId(),identifier).getIdentifier(), HttpStatus.OK);
+        return new ResponseEntity<>(contractService.validateContract(user.getId(),identifier).getIdentifier()+" validated successfully.", HttpStatus.OK);
     }
 }
