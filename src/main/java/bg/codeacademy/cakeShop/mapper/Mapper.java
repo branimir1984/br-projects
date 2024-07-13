@@ -4,16 +4,21 @@ import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.model.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
 public class Mapper {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public Mapper(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     public LegalEntity mapToLegalEntity(LegalEntityRegistrationDTO dto) {
         PersonalData personalData = mapToPersonalData(dto.personalData());
-
-
         LegalEntity legalEntity = new LegalEntity();
         legalEntity.setUin(dto.uin());
         legalEntity.setEmail(dto.email());
@@ -27,7 +32,9 @@ public class Mapper {
         address.setStreet(dto.address().street());
         PersonalData personalData = new PersonalData();
         personalData.setUserName(dto.userName());
-        personalData.setUserPassword(dto.password());
+        String encoded = bCryptPasswordEncoder.encode(dto.password());
+        System.out.println(encoded);
+        personalData.setUserPassword(encoded);
         personalData.setUserRole(Role.valueOf(dto.role()));
         personalData.setAddress(address);
         personalData.setPersonalName(dto.personalName());
