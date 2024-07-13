@@ -9,4 +9,6 @@ public interface BankAccountRepository extends CrudRepository<BankAccount, Integ
     BankAccount findBankAccountByBeneficiary_idAndIban(int principalId, String iban);
 
     BankAccount findBankAccountByIban(String iban);
+
+    BankAccount findBankAccountByIbanAndId(String iban, int id);
 }
