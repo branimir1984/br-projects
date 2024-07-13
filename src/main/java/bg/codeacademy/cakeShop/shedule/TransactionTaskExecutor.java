@@ -5,6 +5,7 @@ import bg.codeacademy.cakeShop.enums.PaymentCriteria;
 import bg.codeacademy.cakeShop.model.ScheduleTransaction;
 import bg.codeacademy.cakeShop.service.BankAccountService;
 import bg.codeacademy.cakeShop.service.TransactionService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import java.util.List;
 @Component
 public class TransactionTaskExecutor implements Runnable {
     private final TransactionService transactionService;
-    private int dailyExecutionHour = 21;
+    @Value("#{'${schedule.execution-daily}'}")
+    private int dailyExecutionHour;
     private boolean awake = false;
     private final List<ScheduleTransaction> scheduleTransactionList;
 
