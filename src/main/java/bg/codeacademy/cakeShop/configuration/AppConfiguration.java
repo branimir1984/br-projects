@@ -4,12 +4,13 @@ import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.shedule.TransactionTaskExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class AppConfiguration {
     @Bean
-    public Mapper modelMapper() {
-        return new Mapper();
+    public Mapper modelMapper(BCryptPasswordEncoder passwordEncoder) {
+        return new Mapper(passwordEncoder);
     }
 
     @Bean
