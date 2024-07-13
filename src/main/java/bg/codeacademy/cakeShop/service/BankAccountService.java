@@ -88,4 +88,8 @@ public class BankAccountService {
         saveBankAccount(account);
         return account;
     }
+
+    public List<BankAccount> getBankAccounts(int id) {
+        return personalDataService.getPersonalData(id).getBankAccount();
+    }
 }
