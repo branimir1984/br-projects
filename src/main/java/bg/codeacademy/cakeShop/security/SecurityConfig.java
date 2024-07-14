@@ -19,20 +19,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
+//        return http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .cors(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .anyRequest().authenticated()
+//                )
+//                .httpBasic(Customizer.withDefaults()).sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .formLogin(Customizer.withDefaults())
+//                .build();
+        http
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/api/v1/send-mail").permitAll() // Allow access to send-mail endpoint
+                                .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults()).sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(Customizer.withDefaults())
-                .build();
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/send-mail")) // Disable CSRF protection for send-mail endpoint
+                .httpBasic(Customizer.withDefaults()); // Updated way to enable HTTP Basic authentication
+        return http.build();
+    }
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
-}
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
+//}
