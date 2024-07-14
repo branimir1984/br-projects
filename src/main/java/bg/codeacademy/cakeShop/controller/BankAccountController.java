@@ -1,15 +1,12 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.BankAccountDTO;
-import bg.codeacademy.cakeShop.dto.TransactionDTO;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.BankAccountService;
-import bg.codeacademy.cakeShop.service.TransactionService;
 import bg.codeacademy.cakeShop.validator.ValidEnum;
-import bg.codeacademy.cakeShop.validator.ValidIban;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
