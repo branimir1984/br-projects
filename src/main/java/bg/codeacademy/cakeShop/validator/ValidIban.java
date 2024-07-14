@@ -12,11 +12,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = EnumValidator.class)
+@Constraint(validatedBy = IbanValidator.class)
 @Documented
 public @interface ValidIban {
 
-    String message() default "must be any of enum {enumClass}";
+    String message() default "IBAN is not valid!";
 
     Class<?>[] groups() default {};
 

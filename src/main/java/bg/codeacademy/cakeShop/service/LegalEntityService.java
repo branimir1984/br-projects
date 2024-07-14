@@ -1,6 +1,5 @@
 package bg.codeacademy.cakeShop.service;
 
-import bg.codeacademy.cakeShop.dto.ContractDTO;
 import bg.codeacademy.cakeShop.error_handling.exception.LegalEntityNotFoundException;
 import bg.codeacademy.cakeShop.error_handling.exception.RoleNotSupportedException;
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;

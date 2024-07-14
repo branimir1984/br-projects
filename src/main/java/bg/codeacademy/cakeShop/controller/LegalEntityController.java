@@ -1,7 +1,6 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.*;
-import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
@@ -10,11 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,11 +74,11 @@ public class LegalEntityController {
 
     @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_RENTIER', 'ROLE_DELIVER')")
     @GetMapping("/contracts")
-    public ResponseEntity<Map<String, List<ContractDTO>>> getContracts(
+    public ResponseEntity<Map<String, List<ContractResponseDTO>>> getContracts(
             Authentication authentication) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         Map<String, List<Contract>> transactionList = legalEntityService.getLegalEntityContracts(user.getId());
-        Map<String, List<ContractDTO>> transactionDtoList = mapper.mapToTransactionListDto(transactionList);
+        Map<String, List<ContractResponseDTO>> transactionDtoList = mapper.mapToContractListDto(transactionList);
         return new ResponseEntity<>(transactionDtoList, HttpStatus.OK);
     }
 

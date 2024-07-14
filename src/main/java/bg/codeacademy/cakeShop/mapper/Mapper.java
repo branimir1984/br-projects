@@ -4,16 +4,21 @@ import bg.codeacademy.cakeShop.dto.*;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.model.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
 public class Mapper {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public Mapper(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     public LegalEntity mapToLegalEntity(LegalEntityRegistrationDTO dto) {
         PersonalData personalData = mapToPersonalData(dto.personalData());
-
-
         LegalEntity legalEntity = new LegalEntity();
         legalEntity.setUin(dto.uin());
         legalEntity.setEmail(dto.email());
@@ -27,7 +32,9 @@ public class Mapper {
         address.setStreet(dto.address().street());
         PersonalData personalData = new PersonalData();
         personalData.setUserName(dto.userName());
-        personalData.setUserPassword(dto.password());
+        String encoded = bCryptPasswordEncoder.encode(dto.password());
+        System.out.println(encoded);
+        personalData.setUserPassword(encoded);
         personalData.setUserRole(Role.valueOf(dto.role()));
         personalData.setAddress(address);
         personalData.setPersonalName(dto.personalName());
@@ -120,15 +127,18 @@ public class Mapper {
         return scheduleTransactionDTOS;
     }
 
-    public Map<String, List<ContractDTO>> mapToTransactionListDto(Map<String, List<Contract>> contractList) {
-        Map<String, List<ContractDTO>> dtoResponse = new HashMap<>();
+    public Map<String, List<ContractResponseDTO>> mapToContractListDto(Map<String, List<Contract>> contractList) {
+        Map<String, List<ContractResponseDTO>> dtoResponse = new HashMap<>();
         for (Map.Entry<String, List<Contract>> entry : contractList.entrySet()) {
-            List<ContractDTO> list = new ArrayList<>();
+            List<ContractResponseDTO> list = new ArrayList<>();
             for (Contract of : entry.getValue()) {
-                ContractDTO contractDto = new ContractDTO(
+                ContractResponseDTO contractDto = new ContractResponseDTO(
+                        of.getIdentifier(),
                         of.getAmount(),
                         String.valueOf(of.getCurrency()),
-                        of.getRecipient().getUin()
+                        of.getOfferor().getUin(),
+                        of.getRecipient().getUin(),
+                        String.valueOf(of.getStatus())
                 );
                 list.add(contractDto);
             }
@@ -147,5 +157,18 @@ public class Mapper {
             comments.add(dto);
         }
         return comments;
+    }
+
+    public List<BankAccountDTO> mapToBankAccountDtoList(List<BankAccount> bankAccountList) {
+        List<BankAccountDTO> dtoList = new ArrayList<>();
+        for (BankAccount account : bankAccountList) {
+            BankAccountDTO dto = new BankAccountDTO(
+                    account.getIban(),
+                    account.getAmount(),
+                    String.valueOf(account.getCurrency()),
+                    account.isRental());
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 }
