@@ -146,6 +146,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler({ConversionException.class})
+    public ResponseEntity<Object> handleConversionException(ConversionException exception) {
+        exception.printStackTrace(System.out);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status, WebRequest request) {
