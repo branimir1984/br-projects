@@ -6,13 +6,14 @@ import bg.codeacademy.cakeShop.enums.PaymentCriteria;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.ScheduleTransactionService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/schedule-transactions")
 public class ScheduleTransactionController {
@@ -27,6 +28,7 @@ public class ScheduleTransactionController {
     public ResponseEntity<String> createScheduleTransaction(
             Authentication authentication, @Valid @RequestBody ScheduleTransactionDTO dto) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        log.info("Controller | Create schedule transaction by legal-entity ID:"+user.getId());
         System.out.println("principal id="+user.getId());
         return new ResponseEntity<>(
                 "http://localhost:8080/api/v1/legal-entities/bank-accounts/schedule-transactions/?id="

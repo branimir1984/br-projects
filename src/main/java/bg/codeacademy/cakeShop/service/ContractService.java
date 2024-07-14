@@ -10,12 +10,14 @@ import bg.codeacademy.cakeShop.model.Contract;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.ContractRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
+@Slf4j
 @Service
 public class ContractService {
     public final ContractRepository contractRepository;
@@ -30,10 +32,13 @@ public class ContractService {
         LegalEntity offeror = legalEntityService.getLegalEntity(principal);
         LegalEntity recipient = legalEntityService.getLegalEntity(recipientUin);
         if (offeror.getUin().equals(recipient.getUin())) {
-            throw new InvalidContractException("Offeror and recipient UIN can not be same!");
+            log.error("Service | Offeror and recipient UIN, can not be same!");
+            throw new InvalidContractException("Offeror and recipient UIN, can not be same!");
         }
         Contract contract1 = contractRepository.findContractByOfferorAndRecipientAndStatus(offeror, recipient, Status.SIGNED);
         if (contract1 != null) {
+            log.error("Service | Contract between uin:" + offeror.getUin() + " and "
+                    + recipient.getUin() + " has already been created!");
             throw new UniqueIdentificationNumberExistException("Contract between uin:" + offeror.getUin() + " and "
                     + recipient.getUin() + " has already been created!");
         }
@@ -47,6 +52,7 @@ public class ContractService {
         contract.setRecipient(recipient);
         contract.setStatus(Status.PENDING);
         contractRepository.save(contract);
+        log.info("Service | Save contract with identifier:" + ident);
         return contract;
     }
 
@@ -54,19 +60,26 @@ public class ContractService {
     public Contract validateContract(int id, String identifier) {
         Contract contract = contractRepository.findContractByIdentifier(identifier);
         if (contract == null) {
+            log.error("Service | Contract with identifier:" + identifier + " not found!");
             throw new ContractNotFoundException("Contract with identifier:" + identifier + " not found!");
         }
         LegalEntity legalEntity = legalEntityService.getLegalEntity(id);
         List<Contract> recipientContracts = legalEntity.getContractsToMe();
         if (!recipientContracts.contains(contract)) {
+            log.error("Service | User with UIN:" + legalEntity.getUin()
+                    + " have no contract with identifier:" + identifier);
             throw new ContractNotFoundException("User with UIN:" + legalEntity.getUin()
                     + " have no contract with identifier:" + identifier);
         }
         if (contract.getStatus().equals(Status.PENDING)) {
             contract.setStatus(Status.SIGNED);
+            log.info("Service | Set status of contract as SIGNED");
         } else {
-            throw new ContractAlreadyValidatedException("Contract is already validated");
+            log.error("Service | Contract with identifier:" + identifier + " is already validated");
+            throw new ContractAlreadyValidatedException(
+                    "Contract with identifier:" + identifier + " is already validated");
         }
+        log.info("Service | Save contract with identifier:" + identifier);
         contractRepository.save(contract);
         return contract;
     }
