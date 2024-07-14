@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class TransactionTaskExecutor implements Runnable {
     private final TransactionService transactionService;
-    @Value("#{'${schedule.execution-daily}'}")
+    @Value("${schedule.execution-daily}")
     private int dailyExecutionHour;
     private boolean awake = false;
     private final List<ScheduleTransaction> scheduleTransactionList;

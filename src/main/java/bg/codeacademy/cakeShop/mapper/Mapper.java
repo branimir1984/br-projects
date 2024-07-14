@@ -158,4 +158,17 @@ public class Mapper {
         }
         return comments;
     }
+
+    public List<BankAccountDTO> mapToBankAccountDtoList(List<BankAccount> bankAccountList) {
+        List<BankAccountDTO> dtoList = new ArrayList<>();
+        for (BankAccount account : bankAccountList) {
+            BankAccountDTO dto = new BankAccountDTO(
+                    account.getIban(),
+                    account.getAmount(),
+                    String.valueOf(account.getCurrency()),
+                    account.isRental());
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
 }
