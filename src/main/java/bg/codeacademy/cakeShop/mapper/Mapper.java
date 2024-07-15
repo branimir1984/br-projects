@@ -182,4 +182,12 @@ public class Mapper {
         }
         return itemsList;
     }
+
+    public Map<String, Integer> mapToItemList(List<Storage> storage) {
+        Map<String, Integer> items = new HashMap<>();
+        for (Storage row : storage) {
+            items.put(row.getItem().getName(), row.getCount());
+        }
+        return items;
+    }
 }

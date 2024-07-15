@@ -23,5 +23,6 @@ public class Storage {
     private int count;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner")
     private LegalEntity owner;
 }
