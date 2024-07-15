@@ -171,4 +171,15 @@ public class Mapper {
         }
         return dtoList;
     }
+
+    public Map<Item, Integer> mapToItemsList(List<ItemDTO> items) {
+        Map<Item, Integer> itemsList = new HashMap<>();
+        for (ItemDTO dto : items) {
+            Item item = new Item();
+            item.setName(dto.name());
+            item.setPrice(dto.price());
+            itemsList.put(item, dto.count());
+        }
+        return itemsList;
+    }
 }
