@@ -20,8 +20,8 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction createTransaction(int principalId, String senderIban,
-                                         String recipientIban, int amountPercentage) {
+    public Transaction createTransactionBasedOnPercentage(int principalId, String senderIban,
+                                                          String recipientIban, int amountPercentage) {
         BankAccount senderAccount = bankAccountService.getBankAccount(principalId, senderIban);
         BankAccount recipientAccount = bankAccountService.getBankAccount(recipientIban);
 
@@ -30,6 +30,31 @@ public class TransactionService {
         }
         float amount = calculatePercentage(senderAccount.getAmount(), amountPercentage);
 
+        float newSenderAmount = senderAccount.getAmount() - amount;
+        senderAccount.setAmount(newSenderAmount);
+        bankAccountService.update(senderAccount);
+
+        float newRecipientAmount = recipientAccount.getAmount() + amount;
+        recipientAccount.setAmount(newRecipientAmount);
+        bankAccountService.update(recipientAccount);
+        Transaction transaction = new Transaction();
+        transaction.setSenderBankAccount(senderAccount);
+        transaction.setRecipientBankAccount(recipientAccount);
+        transaction.setDateTime(now());
+        transaction.setAmount(amount);
+        transactionRepository.save(transaction);
+        return transaction;
+    }
+
+    @Transactional
+    public Transaction createTransactionBasedOnAmount(int principalId, String senderIban,
+                                                      String recipientIban, float amount) {
+        BankAccount senderAccount = bankAccountService.getBankAccount(principalId, senderIban);
+        BankAccount recipientAccount = bankAccountService.getBankAccount(recipientIban);
+
+        if (senderAccount.getAmount() <= 0 || senderAccount.getAmount() < amount) {
+            throw new TransactionException("Sender have no enough money in bank account!");
+        }
         float newSenderAmount = senderAccount.getAmount() - amount;
         senderAccount.setAmount(newSenderAmount);
         bankAccountService.update(senderAccount);

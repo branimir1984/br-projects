@@ -12,7 +12,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public Item createItem(String name, double price) {
+    public Item createItem(String name, float price) {
         if (!itemRepository.existsItemByName(name)) {
             Item item = new Item();
             item.setName(name);

@@ -83,4 +83,10 @@ public class ContractService {
         contractRepository.save(contract);
         return contract;
     }
+
+    public Contract getValidatedContract(int principalId, int deliveryId) {
+        LegalEntity principal = legalEntityService.getLegalEntity(principalId);
+        LegalEntity deliver = legalEntityService.getLegalEntity(deliveryId);
+        return contractRepository.findContractByOfferorAndRecipientAndStatus(deliver, principal, Status.SIGNED);
+    }
 }

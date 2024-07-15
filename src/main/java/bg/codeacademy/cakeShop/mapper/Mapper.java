@@ -172,13 +172,21 @@ public class Mapper {
         return dtoList;
     }
 
-    public Map<Item, Integer> mapToItemsList(List<ItemDTO> items) {
+    public Map<Item, Integer> mapDeliveryRequestDTOToItemsList(List<ItemDTO> items) {
         Map<Item, Integer> itemsList = new HashMap<>();
         for (ItemDTO dto : items) {
             Item item = new Item();
             item.setName(dto.name());
             item.setPrice(dto.price());
             itemsList.put(item, dto.count());
+        }
+        return itemsList;
+    }
+
+    public Map<String, Integer> mapChargeShopStorageDTOItemsList(List<TransferItemDTO> items) {
+        Map<String, Integer> itemsList = new HashMap<>();
+        for (TransferItemDTO dto : items) {
+            itemsList.put(dto.name(), dto.count());
         }
         return itemsList;
     }

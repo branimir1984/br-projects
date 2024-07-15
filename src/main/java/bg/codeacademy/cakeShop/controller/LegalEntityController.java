@@ -39,7 +39,6 @@ public class LegalEntityController {
                 + legalEntityService.createLegalEntity(legalEntity).getId(), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<LegalEntityResponse>> getAll() {
         log.info("Controller | Get all legal-entity");
