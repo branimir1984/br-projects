@@ -8,6 +8,7 @@ import bg.codeacademy.cakeShop.model.Contract;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.repository.OfferRepository;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class OfferService {
     }
 
     @Transactional
-    public Offer createOffer(int principalId, int offeredId, float money, Currency currency) {
+    public Offer createOffer(int principalId, int offeredId, float money, Currency currency) throws MessagingException {
         LegalEntity principal = legalEntityService.getLegalEntity(principalId);
         LegalEntity offered = legalEntityService.getLegalEntity(offeredId);
         Contract contract = contractService.createContract(

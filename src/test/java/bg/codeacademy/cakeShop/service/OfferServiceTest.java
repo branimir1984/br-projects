@@ -6,6 +6,7 @@ import bg.codeacademy.cakeShop.error_handling.exception.InvalidOfferException;
 import bg.codeacademy.cakeShop.error_handling.exception.OfferExistException;
 import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.repository.OfferRepository;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class OfferServiceTest {
     }
 
     @Test
-    void shouldCreateOffer() {
+    void shouldCreateOffer() throws MessagingException {
         LegalEntity offeror = formLegalEntity("A");
         LegalEntity offered = formLegalEntity("B");
         Contract contract = formContract(offeror, offered);

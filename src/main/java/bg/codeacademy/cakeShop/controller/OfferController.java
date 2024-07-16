@@ -8,6 +8,7 @@ import bg.codeacademy.cakeShop.model.Offer;
 import bg.codeacademy.cakeShop.model.PersonalData;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.OfferService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class OfferController {
     @PreAuthorize("hasRole('ROLE_DELIVER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createOffer(
-            Authentication authentication, @Valid @RequestBody OfferDTO dto) {
+            Authentication authentication, @Valid @RequestBody OfferDTO dto) throws MessagingException {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         return new ResponseEntity<>("http://localhost:8080/api/v1/legal-entities/offers/?id="
                 + user.getId() + offerService

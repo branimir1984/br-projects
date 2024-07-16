@@ -9,7 +9,10 @@ import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumb
 import bg.codeacademy.cakeShop.model.Contract;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.ContractRepository;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +24,18 @@ public class ContractService {
     public final ContractRepository contractRepository;
     public final LegalEntityService legalEntityService;
 
+    @Value("${spring.mail.username}")
+    private String email;
+    @Autowired
+    EmailService emailService;
+
     public ContractService(ContractRepository contractRepository, LegalEntityService legalEntityService) {
         this.contractRepository = contractRepository;
         this.legalEntityService = legalEntityService;
     }
 
-    public Contract createContract(int principal, float amount, String currency, String recipientUin) {
+
+    public Contract createContract(int principal, float amount, String currency, String recipientUin) throws MessagingException {
         LegalEntity offeror = legalEntityService.getLegalEntity(principal);
         LegalEntity recipient = legalEntityService.getLegalEntity(recipientUin);
         if (offeror.getUin().equals(recipient.getUin())) {
@@ -47,11 +56,19 @@ public class ContractService {
         contract.setRecipient(recipient);
         contract.setStatus(Status.PENDING);
         contractRepository.save(contract);
+//        emailService.sendSimpleMessage(contract.getRecipient().getEmail(),"Contract","This is a contract " +
+//                "sent from an offeror with an email: "+contract.getOfferor().getEmail()+"!/n"+
+//                "If you are pleased with the details of contract with identifier: "+contract.getIdentifier() +
+//                ", please validate it!"+ contract.getRecipient().getPersonalData().getPersonalName());
+        String htmlBody = emailService.generateHtmlContentCreateContract(
+                contract.getRecipient().getPersonalData().getPersonalName(), contract.getOfferor().getEmail(),
+                contract.getIdentifier());
+        emailService.sendHtmlMessage(contract.getRecipient().getEmail(), "Contract", htmlBody);
         return contract;
     }
 
     @Transactional
-    public Contract validateContract(int id, String identifier) {
+    public Contract validateContract(int id, String identifier) throws MessagingException {
         Contract contract = contractRepository.findContractByIdentifier(identifier);
         if (contract == null) {
             throw new ContractNotFoundException("Contract with identifier:" + identifier + " not found!");
@@ -68,6 +85,16 @@ public class ContractService {
             throw new ContractAlreadyValidatedException("Contract is already validated");
         }
         contractRepository.save(contract);
+
+//        emailService.sendSimpleMessage(email,"Contract validation", "Contract with identifier:"+
+//                contract.getIdentifier()+ " has been validated!");
+//        emailService.sendSimpleMessage(contract.getRecipient().getEmail(),"Contract validation",
+//                "Contract with identifier:"+ contract.getIdentifier()+ " has been validated!");
+        String htmlBody = emailService.generateHtmlContentValidateContract(
+                contract.getRecipient().getPersonalData().getPersonalName(),contract.getOfferor().getEmail(),
+                contract.getIdentifier());
+        emailService.sendHtmlMessage(contract.getRecipient().getEmail(),"Contract validation", htmlBody);
+        emailService.sendHtmlMessage(email,"Contract validation", htmlBody);
         return contract;
     }
 }

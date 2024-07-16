@@ -8,17 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 public class EmailController {
-//    private final EmailService emailService;
-//
-//    public EmailController(EmailService emailService) {
-//        this.emailService = emailService;
-//    }
-//
-//    @PostMapping("api/v1/send-email")
-//    public String sendEmail(@RequestBody EmailDetails details){
-//        String status = emailService.sendSimpleMail(details);
-//        return status;
-//    }
 @Autowired
 private EmailService emailService;
 
