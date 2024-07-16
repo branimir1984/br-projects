@@ -1,5 +1,6 @@
 package bg.codeacademy.cakeShop.model;
 
+import bg.codeacademy.cakeShop.enums.BankAccountType;
 import bg.codeacademy.cakeShop.enums.Currency;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"iban", "bankAccountType"})})
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,7 @@ public class BankAccount {
     @JoinColumn(name = "beneficiary")
     private PersonalData beneficiary;
 
-    private boolean isRental;
+    private BankAccountType bankAccountType;
 
     @OneToMany(mappedBy = "sender")
     private List<ScheduleTransaction> sender;
@@ -54,7 +56,11 @@ public class BankAccount {
                 ", amount=" + amount +
                 ", currency=" + currency +
                 ", beneficiary=" + beneficiary +
-                ", isRental=" + isRental +
+                ", bankAccountType=" + bankAccountType +
+                ", sender=" + sender +
+                ", recipient=" + recipient +
+                ", senderList=" + senderList +
+                ", recipientList=" + recipientList +
                 '}';
     }
 

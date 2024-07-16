@@ -26,7 +26,7 @@ class TurnoverServiceTest {
         Turnover turnover = formTurnover(100, owner);
         when(turnoverRepository.findTurnoverByDate(now())).thenReturn(turnover);
         Turnover response = turnoverService.additionAmount(1, 200);
-        Assertions.assertEquals(200,response.getAmount());
+        Assertions.assertEquals(300,response.getAmount());
         verify(turnoverRepository,times(1)).save(turnover);
     }
     @Test
