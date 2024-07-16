@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -109,5 +110,15 @@ public class LegalEntityController {
         List<Storage> storage = legalEntityService.getStock(user.getId());
         Map<String, Integer> items = mapper.mapToItemList(storage);
         return new ResponseEntity<>(items, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_DELIVER')")
+    @GetMapping("/turnovers")
+    public ResponseEntity<Map<LocalDate, Float>> getTurnover(
+            Authentication authentication) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        log.info("Controller | Get turnover for legal-entity with ID=" + user.getId());
+        Map<LocalDate, Float> turnovers = legalEntityService.getTurnovers(user.getId());
+        return new ResponseEntity<>(turnovers, HttpStatus.OK);
     }
 }

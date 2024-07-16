@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StorageRepository extends JpaRepository<Storage, Integer> {
     Storage findByItem_NameAndOwner_Id(String name, int id);
-
 }
 

@@ -14,6 +14,7 @@ public class ExcludeConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/legal-entities"))
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/comments"))
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/conversions"))
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/send-mail"));
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/send-mail"))
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/purchases"));
     }
 }

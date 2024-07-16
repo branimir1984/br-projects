@@ -52,7 +52,7 @@ public class StorageController {
     public ResponseEntity<Map<String, Integer>> putItemInShopStorage(
             Authentication authentication, @RequestBody @Valid ChargeShopStorageDTO dto) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
-        Map<String, Integer> items = mapper.mapChargeShopStorageDTOItemsList(dto.items());
+        Map<String, Integer> items = mapper.mapTransferItemDto(dto.items());
         Map<String, Integer> itemsResponse = storageService.putItemInShopStorage(
                 user.getId(), dto.deliverBankAccountIban(), dto.deliveryId(), dto.shopBankAccountIban(), items);
         log.info("Controller | Put items in shop storage");

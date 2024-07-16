@@ -25,7 +25,7 @@ class TurnoverServiceTest {
         LegalEntity owner = formLegalEntity();
         Turnover turnover = formTurnover(100, owner);
         when(turnoverRepository.findTurnoverByDate(now())).thenReturn(turnover);
-        Turnover response = turnoverService.updateTurnover(1, 200);
+        Turnover response = turnoverService.additionAmount(1, 200);
         Assertions.assertEquals(200,response.getAmount());
         verify(turnoverRepository,times(1)).save(turnover);
     }
@@ -35,7 +35,7 @@ class TurnoverServiceTest {
         Turnover turnover = formTurnover(100, owner);
         when(turnoverRepository.findTurnoverByDate(now())).thenReturn(null);
         when(legalEntityService.getLegalEntity(1)).thenReturn(owner);
-        Turnover response = turnoverService.updateTurnover(1, 200);
+        Turnover response = turnoverService.additionAmount(1, 200);
         Assertions.assertEquals(200,response.getAmount());
         verify(turnoverRepository,times(1)).save(response);
     }
