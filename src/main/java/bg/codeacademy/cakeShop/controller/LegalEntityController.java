@@ -39,7 +39,6 @@ public class LegalEntityController {
                 + legalEntityService.createLegalEntity(legalEntity).getId(), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<LegalEntityResponse>> getAll() {
         log.info("Controller | Get all legal-entity");
@@ -99,5 +98,16 @@ public class LegalEntityController {
         List<Comment> commentList = legalEntityService.getComments(user.getId());
         List<CommentResponseDTO> commentDtoList = mapper.mapToCommentListDto(commentList);
         return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_DELIVER')")
+    @GetMapping("/storages")
+    public ResponseEntity<Map<String, Integer>> getStock(
+            Authentication authentication) {
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        log.info("Controller | Get stock for legal-entity with ID=" + user.getId());
+        List<Storage> storage = legalEntityService.getStock(user.getId());
+        Map<String, Integer> items = mapper.mapToItemList(storage);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 }

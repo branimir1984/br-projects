@@ -35,7 +35,7 @@ public class TransactionController {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         log.info("Controller | Create transaction by legal-entity ID:"+user.getId());
         return new ResponseEntity<>("http://localhost:8080/api/v1/transactions/?id="
-              + transactionService.createTransaction(
+              + transactionService.createTransactionBasedOnPercentage(
                       user.getId(),
                 dto.senderIban(),
                 dto.recipientIban(),

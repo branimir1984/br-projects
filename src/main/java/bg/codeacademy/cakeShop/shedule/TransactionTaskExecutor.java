@@ -3,7 +3,6 @@ package bg.codeacademy.cakeShop.shedule;
 
 import bg.codeacademy.cakeShop.enums.PaymentCriteria;
 import bg.codeacademy.cakeShop.model.ScheduleTransaction;
-import bg.codeacademy.cakeShop.service.BankAccountService;
 import bg.codeacademy.cakeShop.service.TransactionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,7 +46,7 @@ public class TransactionTaskExecutor implements Runnable {
                 for (ScheduleTransaction task : scheduleTransactionList) {
                     if (task.getPaymentCriteria().equals(PaymentCriteria.DAILY)) {
                         if (lt.getHour() == dailyExecutionHour) {
-                            transactionService.createTransaction(
+                            transactionService.createTransactionBasedOnPercentage(
                                     task.getSender().getBeneficiary().getId(),
                                     task.getSender().getIban(),
                                     task.getRecipient().getIban(),
@@ -57,7 +56,7 @@ public class TransactionTaskExecutor implements Runnable {
                         LocalDate now = LocalDate.now();
                         LocalDate lastDay = now.with(TemporalAdjusters.lastDayOfMonth());
                         if (now == lastDay) {
-                            transactionService.createTransaction(
+                            transactionService.createTransactionBasedOnPercentage(
                                     task.getSender().getBeneficiary().getId(),
                                     task.getSender().getIban(),
                                     task.getRecipient().getIban(),

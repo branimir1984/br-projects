@@ -171,4 +171,31 @@ public class Mapper {
         }
         return dtoList;
     }
+
+    public Map<Item, Integer> mapDeliveryRequestDTOToItemsList(List<ItemDTO> items) {
+        Map<Item, Integer> itemsList = new HashMap<>();
+        for (ItemDTO dto : items) {
+            Item item = new Item();
+            item.setName(dto.name());
+            item.setPrice(dto.price());
+            itemsList.put(item, dto.count());
+        }
+        return itemsList;
+    }
+
+    public Map<String, Integer> mapChargeShopStorageDTOItemsList(List<TransferItemDTO> items) {
+        Map<String, Integer> itemsList = new HashMap<>();
+        for (TransferItemDTO dto : items) {
+            itemsList.put(dto.name(), dto.count());
+        }
+        return itemsList;
+    }
+
+    public Map<String, Integer> mapToItemList(List<Storage> storage) {
+        Map<String, Integer> items = new HashMap<>();
+        for (Storage row : storage) {
+            items.put(row.getItem().getName(), row.getCount());
+        }
+        return items;
+    }
 }

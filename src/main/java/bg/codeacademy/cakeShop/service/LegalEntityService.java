@@ -115,4 +115,8 @@ public class LegalEntityService {
         LegalEntity entity = getLegalEntity(id);
         return entity.getComments();
     }
+
+    public List<Storage> getStock(int id) {
+        return getLegalEntity(id).getStorageRows();
+    }
 }
