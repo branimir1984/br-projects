@@ -54,7 +54,7 @@ public class StorageController {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         Map<String, Integer> items = mapper.mapTransferItemDto(dto.items());
         Map<String, Integer> itemsResponse = storageService.putItemInShopStorage(
-                user.getId(), dto.deliverBankAccountIban(), dto.deliveryId(), dto.shopBankAccountIban(), items);
+                user.getId(),  dto.deliveryId(),  items);
         log.info("Controller | Put items in shop storage");
         return new ResponseEntity<>(itemsResponse, HttpStatus.OK);
     }

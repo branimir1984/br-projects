@@ -112,4 +112,14 @@ public class BankAccountService {
         log.info("Service | Get all bank accounts");
         return personalDataService.getPersonalData(id).getBankAccount();
     }
+
+    public BankAccount getBankAccount(int id, BankAccountType bankAccountType) {
+        for (BankAccount ba : getBankAccounts(id)) {
+            if (ba.getBankAccountType().equals(bankAccountType)) {
+                return ba;
+            }
+        }
+        log.error("Service | Bank account of type:" + bankAccountType + " not found!");
+        throw new BankAccountNotExistException("Bank account of type:" + bankAccountType + " not found!");
+    }
 }

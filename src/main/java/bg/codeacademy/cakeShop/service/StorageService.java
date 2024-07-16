@@ -61,8 +61,8 @@ public class StorageService {
     }
 
     @Transactional
-    public Map<String, Integer> putItemInShopStorage(int principalId, String deliveryIban, int deliveryId,
-                                                     String shopIban, Map<String, Integer> itemsNameList) {
+    public Map<String, Integer> putItemInShopStorage(int principalId, int deliveryId,
+                                                      Map<String, Integer> itemsNameList) {
         Contract contract = contractService.getValidatedContract(principalId, deliveryId);
         if (contract == null) {
             log.error("Service | Not allowed to buy items from deliver with ID:" + deliveryId +
@@ -100,13 +100,6 @@ public class StorageService {
         }
         //Here update the principal storage
         createItemInStorage(principalId, itemsList);
-
-        //Here pay for the items order
-        transactionService.createTransactionBasedOnAmount(
-                principalId,
-                shopIban,
-                deliveryIban,
-                totalOrderSum);
         return itemsNameList;
     }
 
