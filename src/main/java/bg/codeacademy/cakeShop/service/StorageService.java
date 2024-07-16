@@ -96,7 +96,7 @@ public class StorageService {
             log.info("Service | Update item with name:" + entry.getKey());
 
             itemsList.put(deliveryStorageRow.getItem(), itemCount);
-            totalOrderSum += deliveryStorageRow.getItem().getPrice()*entry.getValue();
+            totalOrderSum += deliveryStorageRow.getItem().getPrice() * entry.getValue();
         }
         //Here update the principal storage
         createItemInStorage(principalId, itemsList);
@@ -108,5 +108,23 @@ public class StorageService {
                 deliveryIban,
                 totalOrderSum);
         return itemsNameList;
+    }
+
+    public Storage getStorage(String itemName, int shopId) {
+        Storage storageRow = storageRepository.findByItem_NameAndOwner_Id(itemName, shopId);
+        if (storageRow == null) {
+            log.error("Service | No item with name:" +
+                    itemName + " in storage with legal-entity ID:" + shopId);
+            throw new ItemStockException("No item with name:" +
+                    itemName + " in storage with legal-entity ID:" + shopId);
+        }
+        log.info("Service | Get item with name:" +
+                itemName + " from storage with legal-entity ID:" + shopId);
+        return storageRow;
+    }
+
+    public void updateStorage(Storage storageRow) {
+        log.info("Service | Update storage");
+        storageRepository.save(storageRow);
     }
 }

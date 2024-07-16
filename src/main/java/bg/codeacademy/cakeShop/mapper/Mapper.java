@@ -183,7 +183,7 @@ public class Mapper {
         return itemsList;
     }
 
-    public Map<String, Integer> mapChargeShopStorageDTOItemsList(List<TransferItemDTO> items) {
+    public Map<String, Integer> mapTransferItemDto(List<TransferItemDTO> items) {
         Map<String, Integer> itemsList = new HashMap<>();
         for (TransferItemDTO dto : items) {
             itemsList.put(dto.name(), dto.count());

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class LegalEntityService {
         legalEntity.getPersonalData().setAddress(address);
         personalDataService.addPersonalData(legalEntity.getPersonalData());
         bankAccountService.createBankAccount(legalEntity.getPersonalData().getBankAccount());
-
+        log.info("Service | Create legal-entity");
         legalEntityRepository.save(legalEntity);
         return legalEntity;
     }
@@ -118,5 +119,14 @@ public class LegalEntityService {
 
     public List<Storage> getStock(int id) {
         return getLegalEntity(id).getStorageRows();
+    }
+
+    public Map<LocalDate, Float> getTurnovers(int id) {
+        Map<LocalDate, Float> turnover = new HashMap<>();
+        List<Turnover> turnoverList = getLegalEntity(id).getDailyTurnover();
+        for (Turnover to : turnoverList) {
+            turnover.put(to.getDate(), to.getAmount());
+        }
+        return turnover;
     }
 }
