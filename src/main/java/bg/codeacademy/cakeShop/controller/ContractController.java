@@ -1,10 +1,10 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.ContractDTO;
-import bg.codeacademy.cakeShop.dto.ContractResponseDTO;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.ContractService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,8 +28,8 @@ public class ContractController {
 
     @PreAuthorize("hasRole('ROLE_SHOP')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getTransactions(
-            Authentication authentication, @Valid @RequestBody ContractDTO dto) {
+    public ResponseEntity<String> createContract(
+            Authentication authentication, @Valid @RequestBody ContractDTO dto) throws MessagingException {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         log.info("Controller | Get all transactions of legal-entity with ID:" + user.getId());
         return new ResponseEntity<>("http://localhost:8080/api/v1/legal-entities/contracts/?id=" +
@@ -44,8 +44,9 @@ public class ContractController {
     @PreAuthorize("hasAnyRole('ROLE_SHOP', 'ROLE_RENTIER')")
     @PatchMapping
     public ResponseEntity<String> validateContract(
-            Authentication authentication, @Valid @RequestParam String identifier) {
+            Authentication authentication, @Valid @RequestParam String identifier) throws MessagingException {
         log.info("Controller | Validate contract with identifier:" + identifier);
+           // Authentication authentication, @Valid @RequestParam String identifier) throws MessagingException {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         return new ResponseEntity<>(contractService.validateContract(user.getId(), identifier).getIdentifier() + " validated successfully.", HttpStatus.OK);
     }

@@ -8,6 +8,7 @@ import bg.codeacademy.cakeShop.error_handling.exception.InvalidContractException
 import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumberExistException;
 import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.repository.ContractRepository;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class ContractServiceTest {
     }
 
     @Test
-    void shouldCreateContract() {
+    void shouldCreateContract() throws MessagingException {
         LegalEntity offeror = formLegalEntity("A");
         LegalEntity recipient = formLegalEntity("B");
         Contract contract1 = formContract("", offeror, recipient);
@@ -75,7 +76,7 @@ class ContractServiceTest {
     }
 
     @Test
-    void shouldValidateContract() {
+    void shouldValidateContract() throws MessagingException {
         LegalEntity offeror = formLegalEntity("A");
         LegalEntity recipient = formLegalEntity("B");
         Contract contract = formContract("SHOP-DELIVER-1", offeror, recipient);
