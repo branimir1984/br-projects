@@ -34,7 +34,7 @@ class TransactionServiceTest {
         float amount = calculatePercentage(senderAccount.getAmount(), percentage);
         float newSenderAmount = senderAccount.getAmount() - amount;
         senderAccount.setAmount(newSenderAmount);
-        Transaction response = transactionService.createTransaction(
+        Transaction response = transactionService.createTransactionBasedOnPercentage(
                 principal, senderAccount.getIban(), recipientAccount.getIban(), percentage);
         verify(bankAccountService, times(1)).update(senderAccount);
         float newRecipientAmount = recipientAccount.getAmount() + amount;
@@ -52,7 +52,7 @@ class TransactionServiceTest {
         when(bankAccountService.getBankAccount(principal, senderAccount.getIban())).thenReturn(senderAccount);
         when(bankAccountService.getBankAccount(recipientAccount.getIban())).thenReturn(recipientAccount);
         Assert.assertThrows(TransactionException.class, () -> {
-            transactionService.createTransaction(
+            transactionService.createTransactionBasedOnPercentage(
                     principal, senderAccount.getIban(), recipientAccount.getIban(), percentage);
         });
     }

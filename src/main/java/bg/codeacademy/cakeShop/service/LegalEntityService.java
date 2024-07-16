@@ -6,14 +6,17 @@ import bg.codeacademy.cakeShop.error_handling.exception.UniqueIdentificationNumb
 import bg.codeacademy.cakeShop.model.*;
 import bg.codeacademy.cakeShop.repository.LegalEntityRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class LegalEntityService {
     public final LegalEntityRepository legalEntityRepository;
@@ -42,6 +45,8 @@ public class LegalEntityService {
         }
 
         if (legalEntityRepository.existsLegalEntityByUin(legalEntity.getUin())) {
+            log.error("Legal entity with UIN:"
+                    + legalEntity.getUin() + " already exist!");
             throw new UniqueIdentificationNumberExistException("Legal entity with UIN:"
                     + legalEntity.getUin() + " already exist!");
         }
@@ -50,7 +55,7 @@ public class LegalEntityService {
         legalEntity.getPersonalData().setAddress(address);
         personalDataService.addPersonalData(legalEntity.getPersonalData());
         bankAccountService.createBankAccount(legalEntity.getPersonalData().getBankAccount());
-
+        log.info("Service | Create legal-entity");
         legalEntityRepository.save(legalEntity);
         return legalEntity;
     }
@@ -110,5 +115,18 @@ public class LegalEntityService {
     public List<Comment> getComments(int id) {
         LegalEntity entity = getLegalEntity(id);
         return entity.getComments();
+    }
+
+    public List<Storage> getStock(int id) {
+        return getLegalEntity(id).getStorageRows();
+    }
+
+    public Map<LocalDate, Float> getTurnovers(int id) {
+        Map<LocalDate, Float> turnover = new HashMap<>();
+        List<Turnover> turnoverList = getLegalEntity(id).getDailyTurnover();
+        for (Turnover to : turnoverList) {
+            turnover.put(to.getDate(), to.getAmount());
+        }
+        return turnover;
     }
 }

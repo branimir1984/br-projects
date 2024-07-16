@@ -3,10 +3,12 @@ package bg.codeacademy.cakeShop.service;
 import bg.codeacademy.cakeShop.model.Comment;
 import bg.codeacademy.cakeShop.model.LegalEntity;
 import bg.codeacademy.cakeShop.repository.CommentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static java.time.LocalDateTime.now;
 
+@Slf4j
 @Service
 public class CommentService {
 
@@ -26,6 +28,7 @@ public class CommentService {
         comment.setComment(text);
         comment.setDate(now());
         commentRepository.save(comment);
+        log.info("Service | Create comment for legal-entity with UIN=" + uin);
         return comment;
     }
 }

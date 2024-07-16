@@ -1,16 +1,14 @@
 package bg.codeacademy.cakeShop.controller;
 
 import bg.codeacademy.cakeShop.dto.BankAccountDTO;
-import bg.codeacademy.cakeShop.dto.TransactionDTO;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.mapper.Mapper;
 import bg.codeacademy.cakeShop.model.BankAccount;
 import bg.codeacademy.cakeShop.security.AuthenticatedUser;
 import bg.codeacademy.cakeShop.service.BankAccountService;
-import bg.codeacademy.cakeShop.service.TransactionService;
 import bg.codeacademy.cakeShop.validator.ValidEnum;
-import bg.codeacademy.cakeShop.validator.ValidIban;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/bank-accounts")
 public class BankAccountController {
@@ -34,6 +33,7 @@ public class BankAccountController {
     public ResponseEntity<String> deleteBankAccount(
             Authentication authentication, @RequestParam String iban) {
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        log.info("Controller | Delete bank account with iban:" + iban);
         String ibanResponse = bankAccountService.deleteBankAccount(user.getId(), iban).getIban();
         return new ResponseEntity<>("Bank account with IBAN:" + ibanResponse +
                 " deleted successfully.", HttpStatus.OK);
@@ -45,6 +45,7 @@ public class BankAccountController {
             Authentication authentication,
             @RequestParam String iban,
             @RequestParam @ValidEnum(enumClass = Currency.class) String currency) {
+        log.info("Controller | Change currency for bank account with iban:" + iban);
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         BankAccount account = bankAccountService.changeBankAccountCurrency(user.getId(), iban, currency);
         return new ResponseEntity<>("Currency of bank account with IBAN:" + account.getIban() +
@@ -54,6 +55,7 @@ public class BankAccountController {
     @PreAuthorize("hasRole('ROLE_DELIVER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createBankAccount(Authentication authentication, @Valid @RequestBody BankAccountDTO dto) {
+        log.info("Controller | Create bank account with iban:" + dto.iban());
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         BankAccount account = bankAccountService.createBankAccount(
                 user.getId(),
