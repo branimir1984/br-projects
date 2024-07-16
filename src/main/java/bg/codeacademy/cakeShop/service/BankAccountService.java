@@ -1,5 +1,6 @@
 package bg.codeacademy.cakeShop.service;
 
+import bg.codeacademy.cakeShop.enums.BankAccountType;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountNotExistException;
@@ -90,14 +91,19 @@ public class BankAccountService {
         return account;
     }
 
-    public BankAccount createBankAccount(int id, String iban, float amount, String currency, boolean rental) {
+    public BankAccount createBankAccount(
+            int id,
+            String iban,
+            float amount,
+            String currency,
+            BankAccountType bankAccountType) {
         PersonalData personalData = personalDataService.getPersonalData(id);
         BankAccount account = new BankAccount();
         account.setIban(iban);
         account.setAmount(amount);
         account.setCurrency(Currency.valueOf(currency));
         account.setBeneficiary(personalData);
-        account.setRental(rental);
+        account.setBankAccountType(bankAccountType);
         saveBankAccount(account);
         return account;
     }
@@ -105,5 +111,15 @@ public class BankAccountService {
     public List<BankAccount> getBankAccounts(int id) {
         log.info("Service | Get all bank accounts");
         return personalDataService.getPersonalData(id).getBankAccount();
+    }
+
+    public BankAccount getBankAccount(int id, BankAccountType bankAccountType) {
+        for (BankAccount ba : getBankAccounts(id)) {
+            if (ba.getBankAccountType().equals(bankAccountType)) {
+                return ba;
+            }
+        }
+        log.error("Service | Bank account of type:" + bankAccountType + " not found!");
+        throw new BankAccountNotExistException("Bank account of type:" + bankAccountType + " not found!");
     }
 }

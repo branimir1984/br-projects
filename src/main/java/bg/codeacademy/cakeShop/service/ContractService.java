@@ -1,6 +1,7 @@
 package bg.codeacademy.cakeShop.service;
 
 import bg.codeacademy.cakeShop.enums.Currency;
+import bg.codeacademy.cakeShop.enums.Role;
 import bg.codeacademy.cakeShop.enums.Status;
 import bg.codeacademy.cakeShop.error_handling.exception.ContractAlreadyValidatedException;
 import bg.codeacademy.cakeShop.error_handling.exception.ContractNotFoundException;
@@ -115,5 +116,15 @@ public class ContractService {
         LegalEntity principal = legalEntityService.getLegalEntity(principalId);
         LegalEntity deliver = legalEntityService.getLegalEntity(deliveryId);
         return contractRepository.findContractByOfferorAndRecipientAndStatus(deliver, principal, Status.SIGNED);
+    }
+
+    public Contract getContract(int id, Status status, Role role) {
+        Contract contract = contractRepository.findByOfferor_IdAndStatusAndRecipient_PersonalData_UserRole(id, status, role);
+        if (contract == null) {
+            throw new ContractNotFoundException("Validated contract between" +
+                    " legal-entity ID:" + id + " and legal-entity with role:" + role +
+                    " not found!");
+        }
+        return contract;
     }
 }

@@ -1,5 +1,6 @@
 package bg.codeacademy.cakeShop.service;
 
+import bg.codeacademy.cakeShop.enums.BankAccountType;
 import bg.codeacademy.cakeShop.enums.Currency;
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountExistException;
 import bg.codeacademy.cakeShop.error_handling.exception.BankAccountNotExistException;
@@ -113,7 +114,7 @@ class BankAccountServiceTest {
                 "BG18RZBB91550123456789",
                 200,
                 String.valueOf(Currency.BG),
-                false
+                BankAccountType.GENERAL
         );
         verify(bankAccountRepository).save(response);
     }

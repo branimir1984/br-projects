@@ -7,10 +7,6 @@ import java.util.List;
 
 public record ChargeShopStorageDTO(
         int deliveryId,
-        @ValidIban
-        String shopBankAccountIban,
-        @ValidIban
-        String deliverBankAccountIban,
         @NotNull
         List<TransferItemDTO> items) {
 }

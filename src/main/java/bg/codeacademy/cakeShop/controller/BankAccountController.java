@@ -54,7 +54,8 @@ public class BankAccountController {
 
     @PreAuthorize("hasRole('ROLE_DELIVER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createBankAccount(Authentication authentication, @Valid @RequestBody BankAccountDTO dto) {
+    public ResponseEntity<String> createBankAccount(
+            Authentication authentication, @Valid @RequestBody BankAccountDTO dto) {
         log.info("Controller | Create bank account with iban:" + dto.iban());
         AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
         BankAccount account = bankAccountService.createBankAccount(
@@ -62,7 +63,7 @@ public class BankAccountController {
                 dto.iban(),
                 dto.amount(),
                 dto.currency(),
-                dto.isRental());
+                dto.bankAccountType());
         return new ResponseEntity<>("Bank account with IBAN:" + account.getIban() +
                 " successfully saved.", HttpStatus.CREATED);
     }

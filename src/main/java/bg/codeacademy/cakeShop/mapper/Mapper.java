@@ -46,7 +46,7 @@ public class Mapper {
             bankAccount.setIban(b.iban());
             bankAccount.setAmount(b.amount());
             bankAccount.setCurrency(Currency.valueOf(b.currency()));
-            bankAccount.setRental(b.isRental());
+            bankAccount.setBankAccountType(b.bankAccountType());
             bankAccount.setBeneficiary(personalData);
             accounts.add(bankAccount);
         }
@@ -62,7 +62,7 @@ public class Mapper {
                     bAcc.getIban(),
                     bAcc.getAmount(),
                     String.valueOf(bAcc.getCurrency()),
-                    bAcc.isRental()
+                    bAcc.getBankAccountType()
             );
             bankAccountDTOList.add(bAccDto);
         }
@@ -166,7 +166,7 @@ public class Mapper {
                     account.getIban(),
                     account.getAmount(),
                     String.valueOf(account.getCurrency()),
-                    account.isRental());
+                    account.getBankAccountType());
             dtoList.add(dto);
         }
         return dtoList;
